@@ -9,7 +9,9 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -31,6 +33,7 @@ public class MainActivity extends ActionBarActivity {
     public void setData(List<AktuellesWetter> result) {
 
         StringBuilder sb = new StringBuilder();
+        Wetter wetter = new Wetter();
 
         for(AktuellesWetter aktuellesWetter : result){
             sb.append(aktuellesWetter.toString());
@@ -43,11 +46,15 @@ public class MainActivity extends ActionBarActivity {
         TextView ortschaftView = (TextView) findViewById(R.id.textViewOrtschaft);
         ortschaftView.setText("Uster, Zh");
 
-        int time = (int) (System.currentTimeMillis());
-        Timestamp tsTemp = new Timestamp(time);
 
         TextView timeStamp = (TextView) findViewById(R.id.textViewAktualisiert);
-        timeStamp.setText("Zuletzt aktualisiert: " + tsTemp.toString());
+        timeStamp.setText("Zuletzt aktualisiert: ");
+
+        TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
+        temp.setText(wetter.getTemperatur().toString());
+
+        TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
+        description.setText(wetter.getBeschreibung());
 
     }
 
