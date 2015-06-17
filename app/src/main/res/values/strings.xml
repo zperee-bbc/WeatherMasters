@@ -3,4 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="luftfaeuchtigkeit">Luftf\u00e4uchtigkeit</string>
+    <string name="luftdruck">Luftdruck</string>
 </resources>
