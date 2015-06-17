@@ -4,6 +4,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -12,6 +19,36 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        JSonLoadingTask loadingTask = new JSonLoadingTask(this);
+        loadingTask.execute(String.valueOf("Uster,CH"));
+    }
+
+    public void displayLoadingDataFailedError() {
+        Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+    }
+
+    public void setData(List<AktuellesWetter> result) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for(AktuellesWetter aktuellesWetter : result){
+            sb.append(aktuellesWetter.toString());
+            sb.append("\n\n");
+        }
+
+        TextView dataView = (TextView) findViewById(R.id.textViewDetail);
+        dataView.setText(sb.toString());
+
+        TextView ortschaftView = (TextView) findViewById(R.id.textViewOrtschaft);
+        ortschaftView.setText("Uster, Zh");
+
+        int time = (int) (System.currentTimeMillis());
+        Timestamp tsTemp = new Timestamp(time);
+
+        TextView timeStamp = (TextView) findViewById(R.id.textViewAktualisiert);
+        timeStamp.setText("Zuletzt aktualisiert: " + tsTemp.toString());
+
     }
 
     @Override
@@ -35,4 +72,5 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

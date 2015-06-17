@@ -59,4 +59,5 @@ public class Wetter{
     public void setDatum(String datum) {
         this.datum = datum;
     }
+
 }
