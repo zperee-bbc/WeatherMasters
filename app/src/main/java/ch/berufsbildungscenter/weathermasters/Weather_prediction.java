@@ -1,19 +1,17 @@
-package ch.berufsbildungscenter.weathermastersnew;
+package ch.berufsbildungscenter.weathermasters;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import ch.berufsbildungscenter.weathermasters.R;
 
-
-public class weather_details extends ActionBarActivity {
+public class Weather_prediction extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weather_details);
+        setContentView(R.layout.activity_weather_prediction);
     }
 
     @Override

@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ch.berufsbildungscenter.weathermastersnew.weather_details"
+            android:name=".Weather_prediction"
             android:label="@string/title_activity_weather_details" >
         </activity>
     </application>
