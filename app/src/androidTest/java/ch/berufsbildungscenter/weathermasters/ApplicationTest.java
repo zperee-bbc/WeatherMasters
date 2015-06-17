@@ -1,4 +1,4 @@
-package ch.berufsbildungscenter.weathermastersnew;
+package ch.berufsbildungscenter.weathermasters;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

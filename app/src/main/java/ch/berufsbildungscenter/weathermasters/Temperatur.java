@@ -1,4 +1,4 @@
-package ch.berufsbildungscenter.weathermastersnew;
+package ch.berufsbildungscenter.weathermasters;
 
 /**
  * Created by zmartl on 17.06.2015.

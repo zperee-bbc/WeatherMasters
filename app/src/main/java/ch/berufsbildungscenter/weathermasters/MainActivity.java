@@ -1,4 +1,4 @@
-package ch.berufsbildungscenter.weathermastersnew;
+package ch.berufsbildungscenter.weathermasters;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
