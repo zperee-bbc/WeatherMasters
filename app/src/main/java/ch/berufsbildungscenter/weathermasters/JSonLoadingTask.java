@@ -24,7 +24,7 @@ import java.util.List;
 public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWetter>> {
 
     private static final String LOG_TAG = JSonLoadingTask.class.getCanonicalName();
-    private static final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&APPID=4095f36f60ae167242be033e0c55ca5c&lang=de&q=Uster,CH";
+    private static final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&lang=de&q=Uster,CH";
 
     private MainActivity activity;
 
