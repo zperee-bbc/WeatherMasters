@@ -1,5 +1,7 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by zmartl on 17.06.2015.
  * Version ${VERSION}
@@ -56,7 +58,8 @@ public class AktuellesWetter extends Wetter{
 
     public String tempToString(){
         resuBuilder = new StringBuilder();
-        resuBuilder.append(temp + " \u00B0C");
+        DecimalFormat decimalFormat = new DecimalFormat("#.#");
+        resuBuilder.append(Double.valueOf(decimalFormat.format(temp)) + " \u00B0C");
         return resuBuilder.toString();
     }
 
