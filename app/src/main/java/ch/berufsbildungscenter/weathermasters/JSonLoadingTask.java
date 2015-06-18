@@ -131,7 +131,4 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
         }
 
     }
-
-
-
 }

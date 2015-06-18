@@ -9,15 +9,6 @@ public class AktuellesWetter extends Wetter{
     private double luftdruck;
     private double temp;
     private StringBuilder resuBuilder;
-    private int iconInt;
-
-    public int getIconInt() {
-        return iconInt;
-    }
-
-    public void setIconInt(int iconInt) {
-        this.iconInt = iconInt;
-    }
 
     public double getTemp() {
         return temp;
@@ -45,17 +36,16 @@ public class AktuellesWetter extends Wetter{
 
     @Override
     public String toString(){
-        StringBuilder resultBuilder = new StringBuilder();
+        resuBuilder = new StringBuilder();
+        resuBuilder.append("Luftfeuchtigkeit: ");
+        resuBuilder.append(luftfaeuchtigkeit + "%");
+        resuBuilder.append("\n");
 
-        resultBuilder.append("Luftfeuchtigkeit: ");
-        resultBuilder.append(luftfaeuchtigkeit + "%");
-        resultBuilder.append("\n");
+        resuBuilder.append("Luftdruck: ");
+        resuBuilder.append(luftdruck + " hPa");
+        resuBuilder.append("\n");
 
-        resultBuilder.append("Luftdruck: ");
-        resultBuilder.append(luftdruck + " hPa");
-        resultBuilder.append("\n");
-
-        return resultBuilder.toString();
+        return resuBuilder.toString();
     }
 
     public String descriptionToString(){
@@ -70,15 +60,9 @@ public class AktuellesWetter extends Wetter{
         return resuBuilder.toString();
     }
 
-    public int catchIconAndGetIconPath(){
+    public String getIconPath(){
         resuBuilder = new StringBuilder();
-        if (getIcon().equals("04d")){
-            setIconInt(R.drawable.day_broken_clouds);
-        }
-        return getIconInt();
+        resuBuilder.append(getIcon());
+        return resuBuilder.toString();
     }
-
-
-
-
 }

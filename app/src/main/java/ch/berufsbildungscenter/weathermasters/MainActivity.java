@@ -1,18 +1,19 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.app.ActionBar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.text.format.Time;
 
 import org.w3c.dom.Text;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -52,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
         for (AktuellesWetter aktuellesWetter : result) {
-            stringBuilderIcon.append(aktuellesWetter.catchIconAndGetIconPath());
+            stringBuilderIcon.append(aktuellesWetter.getIconPath());
         }
 
         TextView dataView = (TextView) findViewById(R.id.textViewDetail);
@@ -62,7 +63,11 @@ public class MainActivity extends ActionBarActivity {
         ortschaftView.setText("Uster, Zh");
 
         ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
-        imgView.setImageResource(stringBuilderIcon);
+        if (stringBuilderIcon.toString().equals("01d")) {
+            imgView.setImageResource(R.drawable.day_broken_clouds);
+            imgView.getLayoutParams().height = 500;
+            imgView.getLayoutParams().width = 1000;
+        }
 
 
         TextView timeStamp = (TextView) findViewById(R.id.textViewAktualisiert);
@@ -74,13 +79,18 @@ public class MainActivity extends ActionBarActivity {
         TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
         description.setText(stringBuilder.toString());
 
+        Time now = new Time();
+        now.setToNow();
+        TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
+        time.setText("Zuletzt aktualisiert: " + now.format("%k:%M:%S"));
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -97,5 +107,4 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
