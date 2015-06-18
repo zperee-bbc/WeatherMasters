@@ -9,4 +9,7 @@
     <string name="orte">Orte</string>
     <string name="aktuell">Aktuell</string>
     <string name="vorhersage">Vorhersage</string>
+    <string name="title_activity_search">SearchActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

@@ -56,7 +56,7 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
                 if (HttpURLConnection.HTTP_OK == responseCode) {
                     result = parseData(connection.getInputStream());
                 } else {
-                    Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfügbar", responseCode));
+                    Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfugbar", responseCode));
                 }
 
             }catch (Exception e) {
