@@ -6,4 +6,7 @@
     <string name="heute">Heute:</string>
     <string name="luftdruck">Luftdruck</string>
     <string name="title_activity_weather_details">Wettervorhersage</string>
+    <string name="orte">Orte</string>
+    <string name="aktuell">Aktuell</string>
+    <string name="vorhersage">Vorhersage</string>
 </resources>

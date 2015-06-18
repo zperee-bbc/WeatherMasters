@@ -21,10 +21,7 @@ public class Temperatur {
         this.minTemp = minTemp;
     }
 
-    public double getTemp() {
-
-        return temp;
-    }
+    public double getTemp() { return temp; }
 
     public double getMaxTemp() {
         return maxTemp;

@@ -1,8 +1,5 @@
 package ch.berufsbildungscenter.weathermasters;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,9 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -29,7 +24,6 @@ import java.util.List;
 public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWetter>> {
 
     private static final String LOG_TAG = JSonLoadingTask.class.getCanonicalName();
-
     private static final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&APPID=4095f36f60ae167242be033e0c55ca5c&lang=de&q=Uster,CH";
 
     private MainActivity activity;
@@ -43,13 +37,13 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
         List<AktuellesWetter> result = null;
 
         String ortschaft = params[0].toString();
-
+        HttpURLConnection connection = null;
 
         if (isNetworkConnectionAvailable()){
             try {
                 URL url = new URL(String.format(API_URL));
 
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
                 connection.connect();
@@ -59,16 +53,17 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
                 if (HttpURLConnection.HTTP_OK == responseCode) {
                     result = parseData(connection.getInputStream());
                 } else {
-                    Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Bitte Internetverbindung uberprufen! HTTP status: %d", responseCode));
+                    Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfügbar", responseCode));
                 }
-                connection.disconnect();
 
             }catch (Exception e) {
                 Log.e(LOG_TAG, "Ein Fehler ist aufgetreten", e);
+            } finally {
+                connection.disconnect();
             }
 
         } else {
-            Log.e(LOG_TAG, "Fehler!");
+            Log.e(LOG_TAG, "Keine Internetverbindung!");
             Toast.makeText(activity, "Fehler", Toast.LENGTH_LONG);
         }
 
@@ -102,7 +97,6 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
         aktuellesWetter.setBeschreibung(test.getString("description"));
         aktuellesWetter.setIcon(test.getString("icon"));
 
-
         result.add(aktuellesWetter);
 
         return result;
@@ -129,6 +123,5 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
         } else {
             activity.setData(result);
         }
-
     }
 }
