@@ -1,5 +1,7 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +22,7 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
+    Dialog dialog;
 
     ViewPager mViewPager;
 
@@ -36,6 +39,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         actionBar.addTab(actionBar.newTab().setText(R.string.vorhersage).setTabListener(this), false);
         actionBar.setHomeButtonEnabled(false);
 
+        dialog = ProgressDialog.show(this, "Lade Informationen,", "Bitte warten...");
         JSonLoadingTask loadingTask = new JSonLoadingTask(this);
         loadingTask.execute(String.valueOf("Uster,CH"));
     }
@@ -91,6 +95,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         now.setToNow();
         TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
         time.setText("Zuletzt aktualisiert: " + now.format("%d.%m.%Y") +  " | " + now.format("%k:%M:%S"));
+
+        dialog.dismiss();
 
     }
 
