@@ -11,16 +11,16 @@ import android.util.Log;
  */
 public class Navigation extends ActionBarActivity implements ActionBar.TabListener {
     private static final String LOG_TAG = Navigation.class.getCanonicalName();
+    protected ActionBar actionBar = null;
 
     public void createNavigation() {
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         actionBar.addTab(actionBar.newTab().setText(R.string.orte).setTabListener(this));
         actionBar.addTab(actionBar.newTab().setText(R.string.aktuell).setTabListener(this));
         actionBar.addTab(actionBar.newTab().setText(R.string.vorhersage).setTabListener(this));
         actionBar.setHomeButtonEnabled(false);
-
     }
 
     @Override
@@ -31,6 +31,8 @@ public class Navigation extends ActionBarActivity implements ActionBar.TabListen
             startActivity(intent);
         } else if (tab.getPosition() == 1) {
             Log.i(LOG_TAG, "Aktuell");
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         } else if (tab.getPosition() == 0) {
             Log.i(LOG_TAG, "Orte");
         }
