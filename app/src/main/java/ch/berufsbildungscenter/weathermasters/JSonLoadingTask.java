@@ -97,12 +97,10 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
         aktuellesWetter.setTemp(wetterData.getDouble("temp"));
 
         JSONArray arrayList = data.getJSONArray("weather");
-
         JSONObject test = new JSONObject(arrayList.get(0).toString());
 
-        Wetter wetter = new Wetter();
-        wetter.setBeschreibung(test.getString("description"));
-        wetter.setIcon(test.getString("icon"));
+        aktuellesWetter.setBeschreibung(test.getString("description"));
+        aktuellesWetter.setIcon(test.getString("icon"));
 
 
         result.add(aktuellesWetter);

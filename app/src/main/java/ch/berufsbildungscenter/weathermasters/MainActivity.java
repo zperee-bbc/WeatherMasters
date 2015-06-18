@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,11 +34,25 @@ public class MainActivity extends ActionBarActivity {
     public void setData(List<AktuellesWetter> result) {
 
         StringBuilder sb = new StringBuilder();
-        Wetter wetter = new Wetter();
+        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilderTemp = new StringBuilder();
+        StringBuilder stringBuilderIcon = new StringBuilder();
 
         for(AktuellesWetter aktuellesWetter : result){
             sb.append(aktuellesWetter.toString());
             sb.append("\n\n");
+        }
+
+        for (AktuellesWetter aktuellesWetter : result){
+            stringBuilder.append(aktuellesWetter.descriptionToString());
+        }
+
+        for (AktuellesWetter aktuellesWetter : result){
+            stringBuilderTemp.append(aktuellesWetter.tempToString());
+        }
+
+        for (AktuellesWetter aktuellesWetter : result) {
+            stringBuilderIcon.append(aktuellesWetter.catchIconAndGetIconPath());
         }
 
         TextView dataView = (TextView) findViewById(R.id.textViewDetail);
@@ -46,15 +61,20 @@ public class MainActivity extends ActionBarActivity {
         TextView ortschaftView = (TextView) findViewById(R.id.textViewOrtschaft);
         ortschaftView.setText("Uster, Zh");
 
+        //ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
+        //int path = Integer.parseInt(stringBuilder.toString());
+        //imgView.setImageURI();
+        //imgView.setImageResource(path);
+
 
         TextView timeStamp = (TextView) findViewById(R.id.textViewAktualisiert);
         timeStamp.setText("Zuletzt aktualisiert: ");
 
         TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
-        temp.setText(wetter.getTemperatur().toString());
+        temp.setText(stringBuilderTemp.toString());
 
         TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
-        description.setText(wetter.getBeschreibung());
+        description.setText(stringBuilder.toString());
 
     }
 
