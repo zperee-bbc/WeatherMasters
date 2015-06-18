@@ -1,5 +1,8 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,7 +27,7 @@ import java.util.List;
 public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWetter>> {
 
     private static final String LOG_TAG = JSonLoadingTask.class.getCanonicalName();
-    private static final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&APPID=4095f36f60ae167242be033e0c55ca5c&lang=de&q=Uster,CH";
+    private static final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&lang=de&q=Uster,CH";
 
     private MainActivity activity;
 
@@ -71,11 +74,10 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
     }
 
     private boolean isNetworkConnectionAvailable() {
-        //ConnectivityManager connectivityService = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        //NetworkInfo networkInfo = connectivityService.getActiveNetworkInfo();
+        ConnectivityManager connectivityService = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityService.getActiveNetworkInfo();
 
-        //return null != networkInfo && networkInfo.isConnected();
-        return true;
+        return null != networkInfo && networkInfo.isConnected();
     }
 
     private List<AktuellesWetter> parseData(InputStream inputStream) throws IOException, JSONException {
