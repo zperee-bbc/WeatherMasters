@@ -31,7 +31,7 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
 
     private MainActivity activity;
 
-    public JSonLoadingTask(MainActivity activity){
+    public JSonLoadingTask(MainActivity activity) {
         this.activity = activity;
     }
 
@@ -42,7 +42,7 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
         String ortschaft = params[0].toString();
         HttpURLConnection connection = null;
 
-        if (isNetworkConnectionAvailable()){
+        if (isNetworkConnectionAvailable()) {
             try {
                 URL url = new URL(String.format(API_URL));
 
@@ -59,7 +59,7 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
                     Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfugbar", responseCode));
                 }
 
-            }catch (Exception e) {
+            } catch (Exception e) {
                 Log.e(LOG_TAG, "Ein Fehler ist aufgetreten", e);
             } finally {
                 connection.disconnect();

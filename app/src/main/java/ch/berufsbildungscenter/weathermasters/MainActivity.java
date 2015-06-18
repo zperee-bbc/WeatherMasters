@@ -1,8 +1,13 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -12,7 +17,7 @@ import android.widget.Toast;
 import java.util.List;
 
 
-public class MainActivity extends Navigation {
+public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
 
@@ -23,7 +28,13 @@ public class MainActivity extends Navigation {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        createNavigation();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        actionBar.addTab(actionBar.newTab().setText(R.string.orte).setTabListener(this), false);
+        actionBar.addTab(actionBar.newTab().setText(R.string.aktuell).setTabListener(this), true);
+        actionBar.addTab(actionBar.newTab().setText(R.string.vorhersage).setTabListener(this), false);
+        actionBar.setHomeButtonEnabled(false);
 
         JSonLoadingTask loadingTask = new JSonLoadingTask(this);
         loadingTask.execute(String.valueOf("Uster,CH"));
@@ -69,8 +80,6 @@ public class MainActivity extends Navigation {
         } else {
             imgView.setImageResource(R.drawable.day_broken_clouds);
         }
-        imgView.getLayoutParams().height = 500;
-        imgView.getLayoutParams().width = 1000;
 
         TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
         temp.setText(stringBuilderTemp.toString());
@@ -108,4 +117,24 @@ public class MainActivity extends Navigation {
     }
 
 
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+        if (tab.getPosition() == 2) {
+            Log.i(LOG_TAG, "Vorhersage");
+            Intent intent = new Intent(this, Weather_prediction.class);
+            startActivity(intent);
+        } else if (tab.getPosition() == 0) {
+            Log.i(LOG_TAG, "Orte");
+        }
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+    }
 }
