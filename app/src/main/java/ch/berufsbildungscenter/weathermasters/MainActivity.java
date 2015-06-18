@@ -1,5 +1,6 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.Time;
@@ -13,6 +14,13 @@ import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+        setContentView(R.layout.activity_main);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +71,6 @@ public class MainActivity extends ActionBarActivity {
             imgView.getLayoutParams().height = 500;
             imgView.getLayoutParams().width = 1000;
         }
-
 
         TextView timeStamp = (TextView) findViewById(R.id.textViewAktualisiert);
         timeStamp.setText("Zuletzt aktualisiert: ");

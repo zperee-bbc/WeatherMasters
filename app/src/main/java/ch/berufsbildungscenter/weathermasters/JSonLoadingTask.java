@@ -1,8 +1,5 @@
 package ch.berufsbildungscenter.weathermasters;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,9 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -30,7 +25,7 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
 
     private static final String LOG_TAG = JSonLoadingTask.class.getCanonicalName();
 
-    private static final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&APPID=4095f36f60ae167242be033e0c55ca5c&lang=de&q=Uster,CH";
+    private static final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&lang=de&q=Uster,CH";
 
     private MainActivity activity;
 
@@ -97,10 +92,10 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
         aktuellesWetter.setTemp(wetterData.getDouble("temp"));
 
         JSONArray arrayList = data.getJSONArray("weather");
-        JSONObject test = new JSONObject(arrayList.get(0).toString());
+        JSONObject descriptionData = new JSONObject(arrayList.get(0).toString());
 
-        aktuellesWetter.setBeschreibung(test.getString("description"));
-        aktuellesWetter.setIcon(test.getString("icon"));
+        aktuellesWetter.setBeschreibung(descriptionData.getString("description"));
+        aktuellesWetter.setIcon(descriptionData.getString("icon"));
 
 
         result.add(aktuellesWetter);
