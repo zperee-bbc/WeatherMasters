@@ -61,10 +61,8 @@ public class MainActivity extends ActionBarActivity {
         TextView ortschaftView = (TextView) findViewById(R.id.textViewOrtschaft);
         ortschaftView.setText("Uster, Zh");
 
-        //ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
-        //int path = Integer.parseInt(stringBuilder.toString());
-        //imgView.setImageURI();
-        //imgView.setImageResource(path);
+        ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
+        imgView.setImageResource(stringBuilderIcon);
 
 
         TextView timeStamp = (TextView) findViewById(R.id.textViewAktualisiert);

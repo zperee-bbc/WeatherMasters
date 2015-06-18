@@ -70,14 +70,12 @@ public class AktuellesWetter extends Wetter{
         return resuBuilder.toString();
     }
 
-    public String catchIconAndGetIconPath(){
+    public int catchIconAndGetIconPath(){
         resuBuilder = new StringBuilder();
-        if (getIcon().equals("02d")){
+        if (getIcon().equals("04d")){
             setIconInt(R.drawable.day_broken_clouds);
         }
-
-        resuBuilder.append(getIconInt());
-        return resuBuilder.toString();
+        return getIconInt();
     }
 
 
