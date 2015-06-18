@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">WeatherMasters</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Einstellungen</string>
     <string name="luftfaeuchtigkeit">Luftfeuchtigkeit</string>
+    <string name="heute">Heute:</string>
     <string name="luftdruck">Luftdruck</string>
-    <string name="title_activity_weather_details">weather_details</string>
+    <string name="title_activity_weather_details">Wettervorhersage</string>
 </resources>
