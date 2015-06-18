@@ -1,17 +1,18 @@
 package ch.berufsbildungscenter.weathermasters;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class Weather_prediction extends ActionBarActivity {
+public class Weather_prediction extends Navigation {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_prediction);
+
+        createNavigation();
     }
 
     @Override
@@ -19,6 +20,8 @@ public class Weather_prediction extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_weather_details, menu);
         return true;
+
+
     }
 
     @Override

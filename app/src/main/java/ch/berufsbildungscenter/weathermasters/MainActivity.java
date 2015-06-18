@@ -1,9 +1,7 @@
 package ch.berufsbildungscenter.weathermasters;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.view.ViewPager;
 import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,20 +12,18 @@ import android.widget.Toast;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class MainActivity extends Navigation {
+
+    private static final String LOG_TAG = MainActivity.class.getCanonicalName();
+
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        // Add three tabs to the Action Bar for display
-        actionBar.addTab(actionBar.newTab().setText("@string/orte").setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText("@string/aktuell").setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText("@string/vorhersage").setTabListener(this));
+        createNavigation();
 
         JSonLoadingTask loadingTask = new JSonLoadingTask(this);
         loadingTask.execute(String.valueOf("Uster,CH"));
@@ -111,18 +107,5 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
 
-    }
-
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-    }
 }
