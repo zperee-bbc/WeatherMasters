@@ -59,6 +59,8 @@ public class Weather_prediction extends ActionBarActivity implements ActionBar.T
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else if (tab.getPosition() == 0) {
+            Intent intent = new Intent(this, Favorite_cities.class);
+            startActivity(intent);
             Log.i(LOG_TAG, "Orte");
         }
     }

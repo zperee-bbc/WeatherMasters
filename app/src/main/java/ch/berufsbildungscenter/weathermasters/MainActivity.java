@@ -47,17 +47,31 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //Check zuletzt aktualisiert
         SharedPreferences timeStampFile = getSharedPreferences(REFRESHTIME, 0);
         long lastRefresh = timeStampFile.getLong("TimeStamp", 0);
+        String temperature = timeStampFile.getString("Temperatur", "fail");
+        String details = timeStampFile.getString("Details", "fail");
+        String beschreibung = timeStampFile.getString("Beschreibung", "fail");
 
         Calendar checkCalendar = Calendar.getInstance();
         Date checkNow = checkCalendar.getTime();
         long timeStampCheck = checkNow.getTime() / 1000;
 
-        if (timeStampCheck - lastRefresh > 60) {
+        if (timeStampCheck - lastRefresh/1000 > 600) {
             dialog = ProgressDialog.show(this, "Lade Informationen,", "Bitte warten...");
             JSonLoadingTask loadingTask = new JSonLoadingTask(this);
             loadingTask.execute(String.valueOf("Uster,CH"));
         } else {
             Log.i(LOG_TAG, "Nicht aktuallisiert ");
+            TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
+            temp.setText(temperature);
+            Timestamp lastRefreshText = new Timestamp(lastRefresh);
+            TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
+            time.setText("Zuletzt aktualisiert: " + lastRefreshText);
+            TextView dataView = (TextView) findViewById(R.id.textViewDetail);
+            dataView.setText(details);
+            TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
+            description.setText(beschreibung);
+
+
         }
     }
 
@@ -103,7 +117,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         Date now = calendar.getTime();
         long timeStamp = now.getTime();
         Timestamp currentTimestamp = new Timestamp(timeStamp);
-        timeStamp = timeStamp / 1000;
+//        timeStamp = timeStamp / 1000;
 
         TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
         time.setText("Zuletzt aktualisiert: " + currentTimestamp);
@@ -112,9 +126,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         SharedPreferences timeStampFile = getSharedPreferences(REFRESHTIME, 0);
         SharedPreferences.Editor editor = timeStampFile.edit();
         editor.putLong("TimeStamp", timeStamp);
+        editor.putString("Temperatur", stringBuilderTemp.toString());
+        editor.putString("Details", sb.toString());
+        editor.putString("Beschreibung", stringBuilder.toString());
+
         editor.commit();
 
-        Log.i(LOG_TAG, "TimeStamp test " + String.valueOf(timeStamp));
+        Log.i(LOG_TAG, "TimeStamp " + String.valueOf(timeStamp));
 
         dialog.dismiss();
     }
@@ -150,6 +168,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             startActivity(intent);
         } else if (tab.getPosition() == 0) {
             Log.i(LOG_TAG, "Orte");
+            Intent intent = new Intent(this, Favorite_cities.class);
+            startActivity(intent);
         }
     }
 
