@@ -17,14 +17,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by zmartl on 17.06.2015.
  * Version ${VERSION}
  */
-public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWetter>> {
+public class JSonLoadingTask extends AsyncTask<String, Void, AktuellesWetter> {
 
     private static final String LOG_TAG = JSonLoadingTask.class.getCanonicalName();
     private static final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&lang=de&q=Uster,CH";
@@ -36,8 +34,8 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
     }
 
     @Override
-    protected List<AktuellesWetter> doInBackground(String... params) {
-        List<AktuellesWetter> result = null;
+    protected AktuellesWetter doInBackground(String... params) {
+        AktuellesWetter result = null;
 
         String ortschaft = params[0].toString();
         HttpURLConnection connection = null;
@@ -80,15 +78,14 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
         return null != networkInfo && networkInfo.isConnected();
     }
 
-    private List<AktuellesWetter> parseData(InputStream inputStream) throws IOException, JSONException {
+    private AktuellesWetter parseData(InputStream inputStream) throws IOException, JSONException {
 
-        List<AktuellesWetter> result = new ArrayList<AktuellesWetter>();
+        AktuellesWetter aktuellesWetter = new AktuellesWetter();
 
         String input = readInput(inputStream);
         JSONObject data = new JSONObject(input);
         JSONObject wetterData = data.getJSONObject("main");
 
-        AktuellesWetter aktuellesWetter = new AktuellesWetter();
         aktuellesWetter.setLuftdruck(wetterData.getDouble("pressure"));
         aktuellesWetter.setLuftfaeuchtigkeit(wetterData.getDouble("humidity"));
         aktuellesWetter.setTemp(wetterData.getDouble("temp"));
@@ -99,9 +96,7 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
         aktuellesWetter.setBeschreibung(test.getString("description"));
         aktuellesWetter.setIcon(test.getString("icon"));
 
-        result.add(aktuellesWetter);
-
-        return result;
+        return aktuellesWetter;
     }
 
     private String readInput(InputStream inputStream) throws IOException {
@@ -118,7 +113,7 @@ public class JSonLoadingTask extends AsyncTask<String, Void, List<AktuellesWette
     }
 
     @Override
-    protected void onPostExecute(List<AktuellesWetter> result) {
+    protected void onPostExecute(AktuellesWetter result) {
         if (null == result) {
             activity.displayLoadingDataFailedError();
 

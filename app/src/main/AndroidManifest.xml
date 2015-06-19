@@ -30,8 +30,8 @@
             android:label="@string/title_activity_weather_details" >
         </activity>
         <activity
-            android:name=".TownActivity"
-            android:label="@string/title_activity_town" >
+            android:name="ch.berufsbildungscenter.weathermastersnew.favorite_cities"
+            android:label="@string/title_activity_favorite_cities" >
         </activity>
     </application>
 

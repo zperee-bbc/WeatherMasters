@@ -3,12 +3,12 @@ package ch.berufsbildungscenter.weathermasters;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,18 +16,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
+    public static final String REFRESHTIME = "RefreshTime";
+
     Dialog dialog;
 
     ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -39,38 +44,40 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         actionBar.addTab(actionBar.newTab().setText(R.string.vorhersage).setTabListener(this), false);
         actionBar.setHomeButtonEnabled(false);
 
-        dialog = ProgressDialog.show(this, "Lade Informationen,", "Bitte warten...");
-        JSonLoadingTask loadingTask = new JSonLoadingTask(this);
-        loadingTask.execute(String.valueOf("Uster,CH"));
+        //Check zuletzt aktualisiert
+        SharedPreferences timeStampFile = getSharedPreferences(REFRESHTIME, 0);
+        long lastRefresh = timeStampFile.getLong("TimeStamp", 0);
+
+        Calendar checkCalendar = Calendar.getInstance();
+        Date checkNow = checkCalendar.getTime();
+        long timeStampCheck = checkNow.getTime() / 1000;
+
+        if (timeStampCheck - lastRefresh > 60) {
+            dialog = ProgressDialog.show(this, "Lade Informationen,", "Bitte warten...");
+            JSonLoadingTask loadingTask = new JSonLoadingTask(this);
+            loadingTask.execute(String.valueOf("Uster,CH"));
+        } else {
+            Log.i(LOG_TAG, "Nicht aktuallisiert ");
+        }
     }
 
     public void displayLoadingDataFailedError() {
         Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
     }
 
-    public void setData(List<AktuellesWetter> result) {
+    public void setData(AktuellesWetter aktuellesWetter) {
 
         StringBuilder sb = new StringBuilder();
         StringBuilder stringBuilder = new StringBuilder();
         StringBuilder stringBuilderTemp = new StringBuilder();
         StringBuilder stringBuilderIcon = new StringBuilder();
 
-        for(AktuellesWetter aktuellesWetter : result){
-            sb.append(aktuellesWetter.toString());
-            sb.append("\n\n");
-        }
+        sb.append(aktuellesWetter.toString());
+        sb.append("\n\n");
 
-        for (AktuellesWetter aktuellesWetter : result){
-            stringBuilder.append(aktuellesWetter.descriptionToString());
-        }
-
-        for (AktuellesWetter aktuellesWetter : result){
-            stringBuilderTemp.append(aktuellesWetter.tempToString());
-        }
-
-        for (AktuellesWetter aktuellesWetter : result) {
-            stringBuilderIcon.append(aktuellesWetter.getIconPath());
-        }
+        stringBuilder.append(aktuellesWetter.descriptionToString());
+        stringBuilderTemp.append(aktuellesWetter.tempToString());
+        stringBuilderIcon.append(aktuellesWetter.getIconPath());
 
         TextView dataView = (TextView) findViewById(R.id.textViewDetail);
         dataView.setText(sb.toString());
@@ -91,13 +98,25 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
         description.setText(stringBuilder.toString());
 
-        Time now = new Time();
-        now.setToNow();
+        //Timestamp
+        Calendar calendar = Calendar.getInstance();
+        Date now = calendar.getTime();
+        long timeStamp = now.getTime();
+        Timestamp currentTimestamp = new Timestamp(timeStamp);
+        timeStamp = timeStamp / 1000;
+
         TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
-        time.setText("Zuletzt aktualisiert: " + now.format("%d.%m.%Y") +  " | " + now.format("%k:%M:%S"));
+        time.setText("Zuletzt aktualisiert: " + currentTimestamp);
+
+        //Schreibt aktuellen Timestamp in File
+        SharedPreferences timeStampFile = getSharedPreferences(REFRESHTIME, 0);
+        SharedPreferences.Editor editor = timeStampFile.edit();
+        editor.putLong("TimeStamp", timeStamp);
+        editor.commit();
+
+        Log.i(LOG_TAG, "TimeStamp test " + String.valueOf(timeStamp));
 
         dialog.dismiss();
-
     }
 
     @Override

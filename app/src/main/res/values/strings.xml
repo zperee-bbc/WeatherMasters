@@ -13,4 +13,5 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_town">TownActivity</string>
+    <string name="title_activity_favorite_cities">favorite_cities</string>
 </resources>
