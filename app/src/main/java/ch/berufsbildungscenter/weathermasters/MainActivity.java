@@ -50,6 +50,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         String temperature = timeStampFile.getString("Temperatur", "fail");
         String details = timeStampFile.getString("Details", "fail");
         String beschreibung = timeStampFile.getString("Beschreibung", "fail");
+        String icon = timeStampFile.getString("Icon", "fail");
 
         Calendar checkCalendar = Calendar.getInstance();
         Date checkNow = checkCalendar.getTime();
@@ -70,8 +71,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             dataView.setText(details);
             TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
             description.setText(beschreibung);
-
-
+            ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
+            loadImage(icon, imgView);
         }
     }
 
@@ -100,11 +101,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         ortschaftView.setText("Uster, Zh");
 
         ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
-        if (stringBuilderIcon.toString().equals("01d")) {
-            imgView.setImageResource(R.drawable.day_broken_clouds);
-        } else {
-            imgView.setImageResource(R.drawable.day_broken_clouds);
-        }
+        loadImage(stringBuilderIcon.toString(), imgView);
 
         TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
         temp.setText(stringBuilderTemp.toString());
@@ -129,12 +126,55 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         editor.putString("Temperatur", stringBuilderTemp.toString());
         editor.putString("Details", sb.toString());
         editor.putString("Beschreibung", stringBuilder.toString());
+        editor.putString("Icon", stringBuilderIcon.toString());
 
         editor.commit();
 
         Log.i(LOG_TAG, "TimeStamp " + String.valueOf(timeStamp));
 
         dialog.dismiss();
+    }
+
+    public void loadImage(String stringBuilderIcon, ImageView imageView) {
+        if (stringBuilderIcon.equals("01d")) {
+            imageView.setImageResource(R.drawable.day_clear);
+        } else if (stringBuilderIcon.equals("02d")) {
+            imageView.setImageResource(R.drawable.day_few_clouds);
+        } else if (stringBuilderIcon.equals("03d")) {
+            imageView.setImageResource(R.drawable.day_scattered_clouds);
+        } else if (stringBuilderIcon.equals("04d")) {
+            imageView.setImageResource(R.drawable.day_broken_clouds);
+        } else if (stringBuilderIcon.equals("09d")) {
+            imageView.setImageResource(R.drawable.day_shower_rain);
+        } else if (stringBuilderIcon.equals("10d")) {
+            imageView.setImageResource(R.drawable.day_rain);
+        } else if (stringBuilderIcon.equals("11d")) {
+            imageView.setImageResource(R.drawable.day_thunderstorm);
+        } else if (stringBuilderIcon.equals("13d")) {
+            imageView.setImageResource(R.drawable.day_snow);
+        } else if (stringBuilderIcon.equals("50d")) {
+            imageView.setImageResource(R.drawable.day_mist);
+        } else if (stringBuilderIcon.equals("01n")) {
+            imageView.setImageResource(R.drawable.night_clear);
+        } else if (stringBuilderIcon.equals("02n")) {
+            imageView.setImageResource(R.drawable.night_few_clouds);
+        } else if (stringBuilderIcon.equals("03n")) {
+            imageView.setImageResource(R.drawable.night_scattered_clouds);
+        } else if (stringBuilderIcon.equals("04n")) {
+            imageView.setImageResource(R.drawable.night_broken_clouds);
+        } else if (stringBuilderIcon.equals("09n")) {
+            imageView.setImageResource(R.drawable.night_shower_rain);
+        } else if (stringBuilderIcon.equals("10n")) {
+            imageView.setImageResource(R.drawable.night_rain);
+        } else if (stringBuilderIcon.equals("11n")) {
+            imageView.setImageResource(R.drawable.night_thunderstorm);
+        } else if (stringBuilderIcon.equals("13n")) {
+            imageView.setImageResource(R.drawable.night_snow);
+        } else if (stringBuilderIcon.equals("50n")) {
+            imageView.setImageResource(R.drawable.night_mist);
+        } else {
+            Log.i(LOG_TAG, "Kein Icon gefunden");
+        }
     }
 
     @Override

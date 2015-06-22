@@ -35,46 +35,39 @@ public class JSonLoadingTask extends AsyncTask<String, Void, AktuellesWetter> {
 
     @Override
     protected AktuellesWetter doInBackground(String... params) {
-        AktuellesWetter result = null;
+        AktuellesWetter aktuellesWetter = null;
 
-        String ortschaft = params[0].toString();
         HttpURLConnection connection = null;
 
         if (isNetworkConnectionAvailable()) {
             try {
                 URL url = new URL(String.format(API_URL));
-
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
                 connection.connect();
-
                 int responseCode = connection.getResponseCode();
 
                 if (HttpURLConnection.HTTP_OK == responseCode) {
-                    result = parseData(connection.getInputStream());
+                    aktuellesWetter = parseData(connection.getInputStream());
                 } else {
                     Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfugbar", responseCode));
                 }
-
             } catch (Exception e) {
                 Log.e(LOG_TAG, "Ein Fehler ist aufgetreten", e);
             } finally {
                 connection.disconnect();
             }
-
         } else {
             Log.e(LOG_TAG, "Keine Internetverbindung!");
             Toast.makeText(activity, "Fehler", Toast.LENGTH_LONG);
         }
-
-        return result;
+        return aktuellesWetter;
     }
 
     private boolean isNetworkConnectionAvailable() {
         ConnectivityManager connectivityService = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityService.getActiveNetworkInfo();
-
         return null != networkInfo && networkInfo.isConnected();
     }
 
@@ -101,24 +94,21 @@ public class JSonLoadingTask extends AsyncTask<String, Void, AktuellesWetter> {
 
     private String readInput(InputStream inputStream) throws IOException {
         StringBuilder resultBuilder = new StringBuilder();
-
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 
         String line;
         while (null != (line = bufferedReader.readLine())) {
             resultBuilder.append(line);
         }
-
         return resultBuilder.toString();
     }
 
     @Override
-    protected void onPostExecute(AktuellesWetter result) {
-        if (null == result) {
+    protected void onPostExecute(AktuellesWetter aktuellesWetter) {
+        if (null == aktuellesWetter) {
             activity.displayLoadingDataFailedError();
-
         } else {
-            activity.setData(result);
+            activity.setData(aktuellesWetter);
         }
     }
 }

@@ -4,13 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class Weather_prediction extends ActionBarActivity implements ActionBar.TabListener {
+public class Weather_prediction extends AppCompatActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = Weather_prediction.class.getCanonicalName();
 

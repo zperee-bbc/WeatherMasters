@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class Favorite_cities extends ActionBarActivity implements ActionBar.TabListener {
+public class Favorite_cities extends AppCompatActivity implements ActionBar.TabListener {
     private static final String LOG_TAG = Favorite_cities.class.getCanonicalName();
     public static final String FAVORITECITIES = "FavoriteCities";
     private ListView citiesListView;
