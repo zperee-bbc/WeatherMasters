@@ -24,7 +24,7 @@ import java.util.Date;
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
-    public static final String REFRESHTIME = "RefreshTime";
+    public static final String WETTERDATA = "WetterData";
 
     Dialog dialog;
 
@@ -45,7 +45,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         actionBar.setHomeButtonEnabled(false);
 
         //Check zuletzt aktualisiert
-        SharedPreferences timeStampFile = getSharedPreferences(REFRESHTIME, 0);
+        SharedPreferences timeStampFile = getSharedPreferences(WETTERDATA, 0);
         long lastRefresh = timeStampFile.getLong("TimeStamp", 0);
         String temperature = timeStampFile.getString("Temperatur", "fail");
         String details = timeStampFile.getString("Details", "fail");
@@ -120,7 +120,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         time.setText("Zuletzt aktualisiert: " + currentTimestamp);
 
         //Schreibt aktuellen Timestamp in File
-        SharedPreferences timeStampFile = getSharedPreferences(REFRESHTIME, 0);
+        SharedPreferences timeStampFile = getSharedPreferences(WETTERDATA, 0);
         SharedPreferences.Editor editor = timeStampFile.edit();
         editor.putLong("TimeStamp", timeStamp);
         editor.putString("Temperatur", stringBuilderTemp.toString());
@@ -190,9 +190,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.buttonSettings) {
+            Log.i(LOG_TAG, "Settings Clicked");
             return true;
         }
 
