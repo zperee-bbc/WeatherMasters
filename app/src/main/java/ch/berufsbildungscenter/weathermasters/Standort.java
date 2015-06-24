@@ -6,7 +6,6 @@ package ch.berufsbildungscenter.weathermasters;
  */
 public class Standort {
     private String stadt;
-    private String land;
     private double longitude;
 
     public double getLatitude() {
@@ -23,14 +22,6 @@ public class Standort {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
-    }
-
-    public String getLand() {
-        return land;
-    }
-
-    public void setLand(String land) {
-        this.land = land;
     }
 
     public String getStadt() {

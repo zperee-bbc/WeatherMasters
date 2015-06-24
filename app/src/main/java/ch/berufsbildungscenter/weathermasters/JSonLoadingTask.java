@@ -1,6 +1,8 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -24,8 +26,13 @@ import java.net.URL;
  */
 public class JSonLoadingTask extends AsyncTask<String, Void, AktuellesWetter> {
 
+    Intent intent = new Intent();
+
+    private String position = intent.getStringExtra("position");
+
     private static final String LOG_TAG = JSonLoadingTask.class.getCanonicalName();
-    private static final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&lang=de&q=Uster,CH";
+    private final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&lang=de&";
+    private Context mContext = null;
 
     private MainActivity activity;
 
@@ -36,12 +43,12 @@ public class JSonLoadingTask extends AsyncTask<String, Void, AktuellesWetter> {
     @Override
     protected AktuellesWetter doInBackground(String... params) {
         AktuellesWetter aktuellesWetter = null;
-
+        String pos = params[0];
         HttpURLConnection connection = null;
 
         if (isNetworkConnectionAvailable()) {
             try {
-                URL url = new URL(String.format(API_URL));
+                URL url = new URL(String.format(API_URL+pos));
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -51,16 +58,20 @@ public class JSonLoadingTask extends AsyncTask<String, Void, AktuellesWetter> {
                 if (HttpURLConnection.HTTP_OK == responseCode) {
                     aktuellesWetter = parseData(connection.getInputStream());
                 } else {
-                    Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfugbar", responseCode));
+                    Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfugbar.", responseCode));
                 }
             } catch (Exception e) {
                 Log.e(LOG_TAG, "Ein Fehler ist aufgetreten", e);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                alertDialog.setTitle(R.string.networkTitle);
+                alertDialog.setMessage(R.string.error);
+                alertDialog.setIcon(R.mipmap.network);
             } finally {
                 connection.disconnect();
             }
         } else {
             Log.e(LOG_TAG, "Keine Internetverbindung!");
-            Toast.makeText(activity, "Fehler", Toast.LENGTH_LONG);
+            Toast.makeText(activity, "Keine Internetverbindung", Toast.LENGTH_LONG);
         }
         return aktuellesWetter;
     }
@@ -77,11 +88,15 @@ public class JSonLoadingTask extends AsyncTask<String, Void, AktuellesWetter> {
 
         String input = readInput(inputStream);
         JSONObject data = new JSONObject(input);
+        String name = data.getString("name");
         JSONObject wetterData = data.getJSONObject("main");
 
         aktuellesWetter.setLuftdruck(wetterData.getDouble("pressure"));
         aktuellesWetter.setLuftfaeuchtigkeit(wetterData.getDouble("humidity"));
         aktuellesWetter.setTemp(wetterData.getDouble("temp"));
+
+        aktuellesWetter.setStandort(new Standort());
+        aktuellesWetter.getStandort().setStadt(name);
 
         JSONArray arrayList = data.getJSONArray("weather");
         JSONObject test = new JSONObject(arrayList.get(0).toString());

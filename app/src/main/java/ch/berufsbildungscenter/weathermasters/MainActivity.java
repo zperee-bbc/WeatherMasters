@@ -2,6 +2,7 @@ package ch.berufsbildungscenter.weathermasters;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,7 +25,12 @@ import java.util.Date;
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
+    public static final String REFRESHTIME = "RefreshTime";
     public static final String WETTERDATA = "WetterData";
+    private GPSTracker gps;
+    private Standort standort;
+    private Dialog gpsDialog;
+    private Context mContext = null;
 
     Dialog dialog;
 
@@ -50,83 +56,90 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         String temperature = timeStampFile.getString("Temperatur", "fail");
         String details = timeStampFile.getString("Details", "fail");
         String beschreibung = timeStampFile.getString("Beschreibung", "fail");
+        String stadt = timeStampFile.getString("Ortschaft", "fail");
         String icon = timeStampFile.getString("Icon", "fail");
 
-        Calendar checkCalendar = Calendar.getInstance();
-        Date checkNow = checkCalendar.getTime();
-        long timeStampCheck = checkNow.getTime() / 1000;
+        gps = new GPSTracker(MainActivity.this);
 
-        if (timeStampCheck - lastRefresh/1000 > 600) {
-            dialog = ProgressDialog.show(this, "Lade Informationen,", "Bitte warten...");
+        if(gps.canGetLocation()){
+            gpsDialog = ProgressDialog.show(this, "Suche genaue GPS Position", "Bitte warten...");
+            standort = new Standort();
+            standort.setLatitude(gps.getLatitude());
+            standort.setLongitude(gps.getLongitude());
+            gps.stopUsingGPS();
+            gpsDialog.dismiss();
+            Calendar checkCalendar = Calendar.getInstance();
+            Date checkNow = checkCalendar.getTime();
+            long timeStampCheck = checkNow.getTime() / 1000;
+
+            if (timeStampCheck - lastRefresh / 1000 > 600) {
+            dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
             JSonLoadingTask loadingTask = new JSonLoadingTask(this);
-            loadingTask.execute(String.valueOf("Uster,CH"));
-        } else {
-            Log.i(LOG_TAG, "Nicht aktuallisiert ");
-            TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
-            temp.setText(temperature);
-            Timestamp lastRefreshText = new Timestamp(lastRefresh);
-            TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
-            time.setText("Zuletzt aktualisiert: " + lastRefreshText);
-            TextView dataView = (TextView) findViewById(R.id.textViewDetail);
-            dataView.setText(details);
-            TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
-            description.setText(beschreibung);
-            ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
-            loadImage(icon, imgView);
+            loadingTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
+            } else {
+                    TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
+                    temp.setText(temperature);
+                    Timestamp lastRefreshText = new Timestamp(lastRefresh);
+                    TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
+                    time.setText("Zuletzt aktualisiert: " + lastRefreshText);
+                    TextView dataView = (TextView) findViewById(R.id.textViewDetail);
+                    dataView.setText(details);
+                    TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
+                    description.setText(beschreibung);
+                    TextView ortschaft = (TextView) findViewById(R.id.textViewOrtschaft);
+                    ortschaft.setText(stadt);
+                    ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
+                    loadImage(icon, imgView);
+            }
+
+        }else{
+            gps.showSettingsAlert();
         }
+
     }
 
     public void displayLoadingDataFailedError() {
-        Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Fehler beim darstellen der Daten.", Toast.LENGTH_SHORT).show();
     }
 
     public void setData(AktuellesWetter aktuellesWetter) {
 
-        StringBuilder sb = new StringBuilder();
-        StringBuilder stringBuilder = new StringBuilder();
-        StringBuilder stringBuilderTemp = new StringBuilder();
-        StringBuilder stringBuilderIcon = new StringBuilder();
-
-        sb.append(aktuellesWetter.toString());
-        sb.append("\n\n");
-
-        stringBuilder.append(aktuellesWetter.descriptionToString());
-        stringBuilderTemp.append(aktuellesWetter.tempToString());
-        stringBuilderIcon.append(aktuellesWetter.getIconPath());
-
         TextView dataView = (TextView) findViewById(R.id.textViewDetail);
-        dataView.setText(sb.toString());
+        dataView.setText(aktuellesWetter.detailToString());
 
         TextView ortschaftView = (TextView) findViewById(R.id.textViewOrtschaft);
-        ortschaftView.setText("Uster, Zh");
+        ortschaftView.setText(aktuellesWetter.getStandort().getStadt());
 
         ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
-        loadImage(stringBuilderIcon.toString(), imgView);
+        loadImage(aktuellesWetter.getIconPath(), imgView);
 
         TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
-        temp.setText(stringBuilderTemp.toString());
+        temp.setText(aktuellesWetter.tempToString());
 
         TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
-        description.setText(stringBuilder.toString());
+        description.setText(aktuellesWetter.descriptionToString());
+
+        TextView ortschaft = (TextView) findViewById(R.id.textViewOrtschaft);
+        ortschaft.setText(aktuellesWetter.getStandort().getStadt());
 
         //Timestamp
         Calendar calendar = Calendar.getInstance();
         Date now = calendar.getTime();
         long timeStamp = now.getTime();
         Timestamp currentTimestamp = new Timestamp(timeStamp);
-//        timeStamp = timeStamp / 1000;
 
         TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
         time.setText("Zuletzt aktualisiert: " + currentTimestamp);
 
         //Schreibt aktuellen Timestamp in File
-        SharedPreferences timeStampFile = getSharedPreferences(WETTERDATA, 0);
+        SharedPreferences timeStampFile = getSharedPreferences(REFRESHTIME, 0);
         SharedPreferences.Editor editor = timeStampFile.edit();
         editor.putLong("TimeStamp", timeStamp);
-        editor.putString("Temperatur", stringBuilderTemp.toString());
-        editor.putString("Details", sb.toString());
-        editor.putString("Beschreibung", stringBuilder.toString());
-        editor.putString("Icon", stringBuilderIcon.toString());
+        editor.putString("Temperatur", aktuellesWetter.tempToString() );
+        editor.putString("Details", aktuellesWetter.descriptionToString());
+        editor.putString("Beschreibung", aktuellesWetter.detailToString());
+        editor.putString("Icon", aktuellesWetter.getIconPath());
+        editor.putString("Ortschaft", aktuellesWetter.getStandort().getStadt());
 
         editor.commit();
 
@@ -193,8 +206,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //noinspection SimplifiableIfStatement
         if (id == R.id.buttonSettings) {
             Log.i(LOG_TAG, "Settings Clicked");
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
             return true;
         }
 

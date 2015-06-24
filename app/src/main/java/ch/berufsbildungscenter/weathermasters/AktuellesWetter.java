@@ -36,13 +36,11 @@ public class AktuellesWetter extends Wetter{
         this.luftdruck = luftdruck;
     }
 
-    @Override
-    public String toString(){
+    public String detailToString(){
         resuBuilder = new StringBuilder();
         resuBuilder.append("Luftfeuchtigkeit: ");
         resuBuilder.append(luftfaeuchtigkeit + "%");
         resuBuilder.append("\n");
-
         resuBuilder.append("Luftdruck: ");
         resuBuilder.append(luftdruck + " hPa");
         resuBuilder.append("\n");

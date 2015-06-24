@@ -9,8 +9,18 @@
     <string name="orte">Orte</string>
     <string name="aktuell">Aktuell</string>
     <string name="vorhersage">Vorhersage</string>
+    <string name="warnung">Warnung</string>
+    <string name="gps_fehler">Standort nicht gefunden</string>
+    <string name="schliessen">Schliessen</string>
+    <string name="einstellung">Einstellungen</string>
     <string name="title_activity_search">SearchActivity</string>
-
+    <string name="gpsTitle">GPS Einstellungen</string>
+    <string name="gpsMessage">GPS ist nicht eingeschalten. Einstellungen öffnen?</string>
+    <string name="ja">Ja</string>
+    <string name="nein">Nein</string>
+    <string name="serviceUnavailable"></string>
+    <string name="networkTitle">Netzwerk Fehler</string>
+    <string name="error">Es ist ein Fehler aufgetretene</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_town">TownActivity</string>
     <string name="title_activity_favorite_cities">favorite_cities</string>
