@@ -193,6 +193,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //noinspection SimplifiableIfStatement
         if (id == R.id.buttonSettings) {
             Log.i(LOG_TAG, "Settings Clicked");
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 

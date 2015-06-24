@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -31,6 +31,10 @@
         <activity
             android:name=".Favorite_cities"
             android:label="@string/title_activity_favorite_citiy" >
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

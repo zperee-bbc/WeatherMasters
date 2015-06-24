@@ -1,0 +1,17 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="pref_header_general">General</string>
+
+
+    <string name="pref_title_unit">Temperaturformat</string>
+    <string-array name="pref_list_unit">
+        <item>C°</item>
+        <item>F°</item>
+    </string-array>
+    <string-array name="pref_list_unit_values">
+        <item>metric</item>
+        <item>imperial</item>
+    </string-array>
+
+</resources>
