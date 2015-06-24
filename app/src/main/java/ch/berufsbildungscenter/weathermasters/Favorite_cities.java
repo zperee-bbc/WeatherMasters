@@ -73,6 +73,8 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -86,7 +88,7 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else if (tab.getPosition() == 2) {
-            Intent intent = new Intent(this, Weather_prediction.class);
+            Intent intent = new Intent(this, PredictionActivity.class);
             startActivity(intent);
             Log.i(LOG_TAG, "Vorhersage");
         }

@@ -10,9 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class Weather_prediction extends AppCompatActivity implements ActionBar.TabListener {
+public class PredictionActivity extends AppCompatActivity implements ActionBar.TabListener {
 
-    private static final String LOG_TAG = Weather_prediction.class.getCanonicalName();
+    private static final String LOG_TAG = PredictionActivity.class.getCanonicalName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +46,8 @@ public class Weather_prediction extends AppCompatActivity implements ActionBar.T
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 

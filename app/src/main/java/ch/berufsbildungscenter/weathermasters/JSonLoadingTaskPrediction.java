@@ -19,30 +19,32 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by zmartl on 17.06.2015.
  * Version ${VERSION}
  */
-public class JSonLoadingTask extends AsyncTask<String, Void, AktuellesWetter> {
+public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersage> {
 
     Intent intent = new Intent();
 
     private String position = intent.getStringExtra("position");
 
-    private static final String LOG_TAG = JSonLoadingTask.class.getCanonicalName();
-    private final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&lang=de&";
+    private static final String LOG_TAG = JSonLoadingTaskPrediction.class.getCanonicalName();
+
+    private final String API_URL = "http://api.openweathermap.org/data/2.5/forecast?units=metric&lang=de&";
     private Context mContext = null;
 
     private MainActivity activity;
 
-    public JSonLoadingTask(MainActivity activity) {
+    public JSonLoadingTaskPrediction(MainActivity activity) {
         this.activity = activity;
     }
 
     @Override
-    protected AktuellesWetter doInBackground(String... params) {
-        AktuellesWetter aktuellesWetter = null;
+    protected Vorhersage doInBackground(String... params) {
+        Vorhersage aktuellesWetter = null;
         String pos = params[0];
         HttpURLConnection connection = null;
 
@@ -82,29 +84,31 @@ public class JSonLoadingTask extends AsyncTask<String, Void, AktuellesWetter> {
         return null != networkInfo && networkInfo.isConnected();
     }
 
-    private AktuellesWetter parseData(InputStream inputStream) throws IOException, JSONException {
+    private Vorhersage parseData(InputStream inputStream) throws IOException, JSONException {
 
-        AktuellesWetter aktuellesWetter = new AktuellesWetter();
 
         String input = readInput(inputStream);
         JSONObject data = new JSONObject(input);
-        String name = data.getString("name");
-        JSONObject wetterData = data.getJSONObject("main");
+        int i = 0;
+        Vorhersage vorhersage = new Vorhersage();
+        ArrayList<Wetter> arrayListWetter = new ArrayList<Wetter>();
+        while(i < 5){
+            Wetter wetter = new Wetter();
+            JSONArray arrayList = data.getJSONArray("list");
+            JSONObject wetterData = new JSONObject(arrayList.get(i).toString());
+            JSONObject dayDataMain = wetterData.getJSONObject("main");
+            wetter.setTemperatur(dayDataMain.getDouble("temp"));
 
-        aktuellesWetter.setLuftdruck(wetterData.getDouble("pressure"));
-        aktuellesWetter.setLuftfaeuchtigkeit(wetterData.getDouble("humidity"));
-        aktuellesWetter.setTemp(wetterData.getDouble("temp"));
+            JSONArray arrayListData = data.getJSONArray("weather");
+            JSONObject dayDataWeather = new JSONObject(arrayListData.get(0).toString());
+            wetter.setBeschreibung(dayDataWeather.getString("description"));
+            wetter.setIcon(dayDataWeather.getString("icon"));
 
-        aktuellesWetter.setStandort(new Standort());
-        aktuellesWetter.getStandort().setStadt(name);
+            arrayListWetter.add(wetter);
+        }
+        vorhersage.setWetterArrayList(arrayListWetter);
 
-        JSONArray arrayList = data.getJSONArray("weather");
-        JSONObject test = new JSONObject(arrayList.get(0).toString());
-
-        aktuellesWetter.setBeschreibung(test.getString("description"));
-        aktuellesWetter.setIcon(test.getString("icon"));
-
-        return aktuellesWetter;
+        return vorhersage;
     }
 
     private String readInput(InputStream inputStream) throws IOException {
@@ -118,7 +122,6 @@ public class JSonLoadingTask extends AsyncTask<String, Void, AktuellesWetter> {
         return resultBuilder.toString();
     }
 
-    @Override
     protected void onPostExecute(AktuellesWetter aktuellesWetter) {
         if (null == aktuellesWetter) {
             activity.displayLoadingDataFailedError();

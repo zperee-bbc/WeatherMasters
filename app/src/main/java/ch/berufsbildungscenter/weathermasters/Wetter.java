@@ -8,9 +8,16 @@ public class Wetter{
     private Standort standort;
     private String beschreibung;
     private String icon;
-    private Temperatur temperatur;
-    private Wind wind;
+    private double temperatur;
     private String datum;
+
+    public double getTemperatur() {
+        return temperatur;
+    }
+
+    public void setTemperatur(double temperatur) {
+        this.temperatur = temperatur;
+    }
 
     public Standort getStandort() {
         return standort;
@@ -34,22 +41,6 @@ public class Wetter{
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public Temperatur getTemperatur() {
-        return temperatur;
-    }
-
-    public void setTemperatur(Temperatur temperatur) {
-        this.temperatur = temperatur;
-    }
-
-    public Wind getWind() {
-        return wind;
-    }
-
-    public void setWind(Wind wind) {
-        this.wind = wind;
     }
 
     public String getDatum() {

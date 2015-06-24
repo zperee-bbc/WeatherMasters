@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         gps = new GPSTracker(MainActivity.this);
 
-        if(gps.canGetLocation()){
+        if (gps.canGetLocation()) {
             gpsDialog = ProgressDialog.show(this, "Suche genaue GPS Position", "Bitte warten...");
             standort = new Standort();
             standort.setLatitude(gps.getLatitude());
@@ -73,26 +73,26 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             long timeStampCheck = checkNow.getTime() / 1000;
 
             if (timeStampCheck - lastRefresh / 1000 > 600) {
-            dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
-            JSonLoadingTask loadingTask = new JSonLoadingTask(this);
-            loadingTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
+                dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
+                JSonLoadingTaskActual loadingTask = new JSonLoadingTaskActual(this);
+                loadingTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
             } else {
-                    TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
-                    temp.setText(temperature);
-                    Timestamp lastRefreshText = new Timestamp(lastRefresh);
-                    TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
-                    time.setText("Zuletzt aktualisiert: " + lastRefreshText);
-                    TextView dataView = (TextView) findViewById(R.id.textViewDetail);
-                    dataView.setText(details);
-                    TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
-                    description.setText(beschreibung);
-                    TextView ortschaft = (TextView) findViewById(R.id.textViewOrtschaft);
-                    ortschaft.setText(stadt);
-                    ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
-                    loadImage(icon, imgView);
+                TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
+                temp.setText(temperature);
+                Timestamp lastRefreshText = new Timestamp(lastRefresh);
+                TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
+                time.setText("Zuletzt aktualisiert: " + lastRefreshText);
+                TextView dataView = (TextView) findViewById(R.id.textViewDetail);
+                dataView.setText(details);
+                TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
+                description.setText(beschreibung);
+                TextView ortschaft = (TextView) findViewById(R.id.textViewOrtschaft);
+                ortschaft.setText(stadt);
+                ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
+                loadImage(icon, imgView);
             }
 
-        }else{
+        } else {
             gps.showSettingsAlert();
         }
 
@@ -135,7 +135,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         SharedPreferences timeStampFile = getSharedPreferences(REFRESHTIME, 0);
         SharedPreferences.Editor editor = timeStampFile.edit();
         editor.putLong("TimeStamp", timeStamp);
-        editor.putString("Temperatur", aktuellesWetter.tempToString() );
+        editor.putString("Temperatur", aktuellesWetter.tempToString());
         editor.putString("Details", aktuellesWetter.descriptionToString());
         editor.putString("Beschreibung", aktuellesWetter.detailToString());
         editor.putString("Icon", aktuellesWetter.getIconPath());
@@ -205,8 +205,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.buttonSettings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             Log.i(LOG_TAG, "Settings Clicked");
             return true;
+        } else if (id == R.id.buttonSearch) {
+            Intent intent = new Intent(this, Favorite_cities.class);
+
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -217,11 +223,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         if (tab.getPosition() == 2) {
             Log.i(LOG_TAG, "Vorhersage");
-            Intent intent = new Intent(this, Weather_prediction.class);
+            Intent intent = new Intent(this, PredictionActivity.class);
             startActivity(intent);
         } else if (tab.getPosition() == 0) {
             Log.i(LOG_TAG, "Orte");
             Intent intent = new Intent(this, Favorite_cities.class);
+
             startActivity(intent);
         }
     }

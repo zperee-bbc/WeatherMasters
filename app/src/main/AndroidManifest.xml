@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Weather_prediction"
+            android:name=".PredictionActivity"
             android:label="@string/title_activity_weather_details" >
         </activity>
         <activity
