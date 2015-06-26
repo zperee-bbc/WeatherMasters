@@ -17,8 +17,9 @@
     <string name="gpsMessage">GPS ist nicht eingeschalten. Einstellungen öffnen?</string>
     <string name="ja">Ja</string>
     <string name="nein">Nein</string>
-    <string name="serviceUnavailable"></string>
+    <string name="serviceUnavailable">Der Service ist aktuell nicht verfügbar. \n Versuchen Sie es später erneut. </string>
     <string name="networkTitle">Netzwerk Fehler</string>
+    <string name="errorTitle">Fehler!</string>
     <string name="error">Es ist ein Fehler aufgetretene</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_town">TownActivity</string>

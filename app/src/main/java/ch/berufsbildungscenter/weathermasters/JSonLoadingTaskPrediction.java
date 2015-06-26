@@ -51,7 +51,8 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
 
         if (isNetworkConnectionAvailable()) {
             try {
-                    url = new URL(String.format(API_URL + pos));
+                    String[] positionArray = pos.split(" ");
+                    url = new URL(String.format(API_URL + positionArray[0]));
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
                     connection.setDoInput(true);
@@ -61,7 +62,13 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
                     if (HttpURLConnection.HTTP_OK == responseCode) {
                         vorhersage = parseData(connection.getInputStream());
                     } else {
+
                         Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfugbar.", responseCode));
+
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                        alertDialog.setTitle(R.string.errorTitle);
+                        alertDialog.setMessage(R.string.serviceUnavailable);
+                        alertDialog.setIcon(R.mipmap.warning);
                     }
 
             } catch (Exception e) {

@@ -39,10 +39,10 @@ public class AktuellesWetter extends Wetter{
     public String detailToString(){
         resuBuilder = new StringBuilder();
         resuBuilder.append("Luftfeuchtigkeit: ");
-        resuBuilder.append(luftfaeuchtigkeit + "%");
+        resuBuilder.append(getLuftfaeuchtigkeit() + "%");
         resuBuilder.append("\n");
         resuBuilder.append("Luftdruck: ");
-        resuBuilder.append(luftdruck + " hPa");
+        resuBuilder.append(getLuftdruck() + " hPa");
         resuBuilder.append("\n");
 
         return resuBuilder.toString();
@@ -57,7 +57,7 @@ public class AktuellesWetter extends Wetter{
     public String tempToString(){
         resuBuilder = new StringBuilder();
         DecimalFormat decimalFormat = new DecimalFormat("#.#");
-        resuBuilder.append(Double.valueOf(decimalFormat.format(temp)) + " \u00B0C");
+        resuBuilder.append(Double.valueOf(decimalFormat.format(getTemp())) + " \u00B0C");
         return resuBuilder.toString();
     }
 

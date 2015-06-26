@@ -24,6 +24,7 @@
                 android:id="@+id/textViewWetterOrt"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/black"
                 android:textSize="28sp" />
 
             <TextView
