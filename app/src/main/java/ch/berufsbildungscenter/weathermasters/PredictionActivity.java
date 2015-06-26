@@ -11,12 +11,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 public class PredictionActivity extends AppCompatActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = PredictionActivity.class.getCanonicalName();
     Dialog dialog;
+    private String ortschaft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,12 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
 
         dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
         JSonLoadingTaskPrediction loadingTask = new JSonLoadingTaskPrediction(this);
-        loadingTask.execute("Uster");
+        Intent intent = getIntent();
+
+        ortschaft = intent.getStringExtra("stadt");
+
+        TextView textViewOrtschaft = (TextView) findViewById(R.id.textViewWetterOrt);
+        textViewOrtschaft.setText(ortschaft);
 
 
     }

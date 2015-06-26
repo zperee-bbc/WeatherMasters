@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -126,7 +127,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         time.setText("Zuletzt aktualisiert: " + currentTimestamp);
 
         //Schreibt aktuellen Timestamp in File
-        SharedPreferences timeStampFile = getSharedPreferences(REFRESHTIME, 0);
+        SharedPreferences timeStampFile = getSharedPreferences(WETTERDATA, 0);
         SharedPreferences.Editor editor = timeStampFile.edit();
         editor.putLong("TimeStamp", timeStamp);
         editor.putString("Temperatur", aktuellesWetter.tempToString());

@@ -65,9 +65,6 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
             public void onItemClick(AdapterView parent, View v, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), PredictionActivity.class);
                 String selected = parent.getItemAtPosition(position).toString();
-
-                Toast toast = Toast.makeText(getApplicationContext(), selected, Toast.LENGTH_SHORT);
-                toast.show();
                 intent.putExtra("stadt", selected);
                 startActivity(intent);
             }
