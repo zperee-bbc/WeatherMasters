@@ -41,6 +41,7 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
 
         TextView textViewOrtschaft = (TextView) findViewById(R.id.textViewWetterOrt);
         textViewOrtschaft.setText(ortschaft);
+        loadingTask.execute(ortschaft);
 
 
     }
@@ -49,6 +50,7 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
         WeatherPrediction_adapter weatherPrediction_adapter = new WeatherPrediction_adapter(this, R.id.weatherPredictionItem, vorhersage.getWetterArrayList());
         ListView prediction_listView = (ListView) findViewById(R.id.prediction_listView);
         prediction_listView.setAdapter(weatherPrediction_adapter);
+
         dialog.dismiss();
     }
 

@@ -17,7 +17,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <TextView
@@ -31,50 +31,13 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:paddingTop="15dp"
-                android:text="@string/heute"
+                android:text="@string/vorhersage"
                 android:textSize="21sp"
                 android:id="@+id/labelHeute" />
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageViewHeuteIcon"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:gravity="left"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/day_clear"
-                    android:contentDescription=""/>
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="25° C"
-                        android:id="@+id/textView"
-                        android:paddingTop="25dp" />
-
-                    <TextView
-                        android:id="@+id/textViewHeuteBeschreibung"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Sonnig"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
             <ListView
                 android:layout_width="wrap_content"
-                android:layout_height="251dp"
+                android:layout_height="match_parent"
                 android:id="@+id/prediction_listView"></ListView>
 
         </LinearLayout>

@@ -1,5 +1,6 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -29,6 +30,7 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
     Intent intent = new Intent();
 
     private String position = intent.getStringExtra("position");
+    private URL url;
 
     private static final String LOG_TAG = JSonLoadingTaskPrediction.class.getCanonicalName();
 
@@ -43,30 +45,31 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
 
     @Override
     protected Vorhersage doInBackground(String... params) {
-        Vorhersage aktuellesWetter = null;
+        Vorhersage vorhersage = null;
         String pos = params[0];
         HttpURLConnection connection = null;
 
         if (isNetworkConnectionAvailable()) {
             try {
-                URL url = new URL(String.format(API_URL+pos));
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setDoInput(true);
-                connection.connect();
-                int responseCode = connection.getResponseCode();
+                    url = new URL(String.format(API_URL + pos));
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setDoInput(true);
+                    connection.connect();
+                    int responseCode = connection.getResponseCode();
 
-                if (HttpURLConnection.HTTP_OK == responseCode) {
-                    aktuellesWetter = parseData(connection.getInputStream());
-                } else {
-                    Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfugbar.", responseCode));
-                }
+                    if (HttpURLConnection.HTTP_OK == responseCode) {
+                        vorhersage = parseData(connection.getInputStream());
+                    } else {
+                        Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfugbar.", responseCode));
+                    }
+
             } catch (Exception e) {
                 Log.e(LOG_TAG, "Ein Fehler ist aufgetreten", e);
-//                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-//                alertDialog.setTitle(R.string.networkTitle);
-//                alertDialog.setMessage(R.string.error);
-//                alertDialog.setIcon(R.mipmap.network);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                alertDialog.setTitle(R.string.networkTitle);
+                alertDialog.setMessage(R.string.error);
+                alertDialog.setIcon(R.mipmap.network);
             } finally {
                 connection.disconnect();
             }
@@ -74,7 +77,7 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
             Log.e(LOG_TAG, "Keine Internetverbindung!");
             Toast.makeText(activity, "Keine Internetverbindung", Toast.LENGTH_LONG);
         }
-        return aktuellesWetter;
+        return vorhersage;
     }
 
     private boolean isNetworkConnectionAvailable() {
@@ -91,7 +94,7 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
         int i = 0;
         Vorhersage vorhersage = new Vorhersage();
         ArrayList<Wetter> arrayListWetter = new ArrayList<Wetter>();
-        while(i < 10){
+        while(i < 5){
             Wetter wetter = new Wetter();
             JSONArray arrayList = data.getJSONArray("list");
             JSONObject wetterData = new JSONObject(arrayList.get(i).toString());
@@ -102,7 +105,7 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
             JSONArray arrayListData = wetterData.getJSONArray("weather");
             JSONObject dayDataWeather = new JSONObject(arrayListData.get(0).toString());
             wetter.setBeschreibung(dayDataWeather.getString("description"));
-//            wetter.setIcon(dayDataWeather.getString("icon"));
+            wetter.setIcon(dayDataWeather.getString("icon"));
 
             arrayListWetter.add(wetter);
             i++;

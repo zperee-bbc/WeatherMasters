@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -32,6 +31,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private Standort standort;
     private Dialog gpsDialog;
     private Context mContext = null;
+    private AktuellesWetter aktuellesWetter;
 
     Dialog dialog;
 
@@ -98,6 +98,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     }
 
     public void setData(AktuellesWetter aktuellesWetter) {
+
+        this.aktuellesWetter = aktuellesWetter;
 
         TextView dataView = (TextView) findViewById(R.id.textViewDetail);
         dataView.setText(aktuellesWetter.detailToString());
@@ -219,6 +221,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         if (tab.getPosition() == 2) {
             Log.i(LOG_TAG, "Vorhersage");
             Intent intent = new Intent(this, PredictionActivity.class);
+            TextView textViewOrtschaft =(TextView)findViewById(R.id.textViewOrtschaft);
+            intent.putExtra("stadt", textViewOrtschaft.getText());
             startActivity(intent);
         } else if (tab.getPosition() == 0) {
             Log.i(LOG_TAG, "Orte");
