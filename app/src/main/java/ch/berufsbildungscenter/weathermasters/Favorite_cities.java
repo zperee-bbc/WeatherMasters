@@ -10,9 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,6 +57,22 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
             citiesArrayAdapter.add(cities2);
             citiesListView.setAdapter(citiesArrayAdapter);
         }
+        actionListener();
+    }
+
+    private void actionListener(){
+        AdapterView.OnItemClickListener mListClickedHandler = new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), PredictionActivity.class);
+                String selected = parent.getItemAtPosition(position).toString();
+
+                Toast toast = Toast.makeText(getApplicationContext(), selected, Toast.LENGTH_SHORT);
+                toast.show();
+                intent.putExtra("stadt", selected);
+                startActivity(intent);
+            }
+        };
+        citiesListView.setOnItemClickListener(mListClickedHandler);
     }
 
     @Override
@@ -117,7 +135,6 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
         editor.commit();
         loadListView();
         addCity.setText("");
-        Log.i(LOG_TAG, "City " + i + " = " + addCity.getText().toString());
     }
 
 }

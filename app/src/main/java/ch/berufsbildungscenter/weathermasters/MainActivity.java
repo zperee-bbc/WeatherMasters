@@ -60,42 +60,36 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         String icon = timeStampFile.getString("Icon", "fail");
 
         gps = new GPSTracker(MainActivity.this);
+        GPSTracker gpsTracker = new GPSTracker(this);
+        gpsDialog = ProgressDialog.show(this, "Suche genaue GPS Position", "Bitte warten...");
+        standort = new Standort();
+        standort.setLatitude(gpsTracker.latitude);
+        standort.setLongitude(gpsTracker.longtitude);
+        gpsDialog.dismiss();
 
-        if (gps.canGetLocation()) {
-            gpsDialog = ProgressDialog.show(this, "Suche genaue GPS Position", "Bitte warten...");
-            standort = new Standort();
-            standort.setLatitude(gps.getLatitude());
-            standort.setLongitude(gps.getLongitude());
-            gps.stopUsingGPS();
-            gpsDialog.dismiss();
-            Calendar checkCalendar = Calendar.getInstance();
-            Date checkNow = checkCalendar.getTime();
-            long timeStampCheck = checkNow.getTime() / 1000;
+        Calendar checkCalendar = Calendar.getInstance();
+        Date checkNow = checkCalendar.getTime();
+        long timeStampCheck = checkNow.getTime() / 1000;
 
-            if (timeStampCheck - lastRefresh / 1000 > 600) {
-                dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
-                JSonLoadingTaskActual loadingTask = new JSonLoadingTaskActual(this);
-                loadingTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
-            } else {
-                TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
-                temp.setText(temperature);
-                Timestamp lastRefreshText = new Timestamp(lastRefresh);
-                TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
-                time.setText("Zuletzt aktualisiert: " + lastRefreshText);
-                TextView dataView = (TextView) findViewById(R.id.textViewDetail);
-                dataView.setText(details);
-                TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
-                description.setText(beschreibung);
-                TextView ortschaft = (TextView) findViewById(R.id.textViewOrtschaft);
-                ortschaft.setText(stadt);
-                ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
-                loadImage(icon, imgView);
-            }
-
+        if (timeStampCheck - lastRefresh / 1000 > 600) {
+            dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
+            JSonLoadingTaskActual loadingTask = new JSonLoadingTaskActual(this);
+            loadingTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
         } else {
-            gps.showSettingsAlert();
+            TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
+            temp.setText(temperature);
+            Timestamp lastRefreshText = new Timestamp(lastRefresh);
+            TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
+            time.setText("Zuletzt aktualisiert: " + lastRefreshText);
+            TextView dataView = (TextView) findViewById(R.id.textViewDetail);
+            dataView.setText(details);
+            TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
+            description.setText(beschreibung);
+            TextView ortschaft = (TextView) findViewById(R.id.textViewOrtschaft);
+            ortschaft.setText(stadt);
+            ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
+            loadImage(icon, imgView);
         }
-
     }
 
     public void displayLoadingDataFailedError() {

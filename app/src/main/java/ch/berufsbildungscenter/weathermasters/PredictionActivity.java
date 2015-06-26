@@ -8,11 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class PredictionActivity extends AppCompatActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = PredictionActivity.class.getCanonicalName();
+    private String ortschaft;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,13 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
         actionBar.addTab(actionBar.newTab().setText(R.string.aktuell).setTabListener(this), false);
         actionBar.addTab(actionBar.newTab().setText(R.string.vorhersage).setTabListener(this), true);
         actionBar.setHomeButtonEnabled(false);
+        Intent intent = getIntent();
+
+        ortschaft = intent.getStringExtra("stadt");
+        name = intent.getStringExtra("name");
+
+        TextView textViewOrtschaft = (TextView) findViewById(R.id.textViewWetterOrt);
+        textViewOrtschaft.setText(ortschaft);
     }
 
     @Override
