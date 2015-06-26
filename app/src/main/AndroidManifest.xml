@@ -37,6 +37,10 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <activity
+            android:name=".WeatherPrediction_adapter"
+            android:label="@string/title_activity_weather_prediction_adapter" >
+        </activity>
     </application>
 
 </manifest>

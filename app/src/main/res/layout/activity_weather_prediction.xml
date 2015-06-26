@@ -16,7 +16,7 @@
         android:layout_alignParentEnd="true">
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -42,7 +42,7 @@
 
                 <ImageView
                     android:id="@+id/imageViewHeuteIcon"
-                    android:layout_width="150dp"
+                    android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:gravity="left"
                     android:scaleType="centerCrop"
@@ -55,12 +55,12 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/textViewHeuteTemp"
-                        android:layout_width="fill_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="18sp"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="25° C"
-                        android:textSize="28sp" />
+                        android:id="@+id/textView"
+                        android:paddingTop="25dp" />
 
                     <TextView
                         android:id="@+id/textViewHeuteBeschreibung"
@@ -69,74 +69,15 @@
                         android:text="Sonnig"
                         android:textSize="18sp" />
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="85dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Mo."
-                        android:textSize="18sp"
-                        android:id="@+id/textViewVorhersageTag1" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="12.09.15"
-                        android:textSize="16sp"
-                        android:id="@+id/textViewVorhersageDatum1" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/imageViewVorhersageIcon1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/day_clear" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingLeft="18dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="27 °C"
-                        android:textSize="16sp"
-                        android:id="@+id/textViewVorhersageTemp1" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Sonnig"
-                        android:textSize="18sp"
-                        android:id="@+id/textViewVorhersageBeschreibung1" />
-
-                </LinearLayout>
-
 
             </LinearLayout>
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="251dp"
+                android:id="@+id/prediction_listView"></ListView>
+
         </LinearLayout>
+
     </LinearLayout>
 </RelativeLayout>

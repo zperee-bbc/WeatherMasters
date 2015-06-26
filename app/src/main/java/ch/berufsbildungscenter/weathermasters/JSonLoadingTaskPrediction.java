@@ -1,6 +1,5 @@
 package ch.berufsbildungscenter.weathermasters;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -33,12 +32,12 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
 
     private static final String LOG_TAG = JSonLoadingTaskPrediction.class.getCanonicalName();
 
-    private final String API_URL = "http://api.openweathermap.org/data/2.5/forecast?units=metric&lang=de&";
+    private final String API_URL = "http://api.openweathermap.org/data/2.5/forecast?units=metric&lang=de&q=";
     private Context mContext = null;
 
-    private MainActivity activity;
+    private PredictionActivity activity;
 
-    public JSonLoadingTaskPrediction(MainActivity activity) {
+    public JSonLoadingTaskPrediction(PredictionActivity activity) {
         this.activity = activity;
     }
 
@@ -64,10 +63,10 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
                 }
             } catch (Exception e) {
                 Log.e(LOG_TAG, "Ein Fehler ist aufgetreten", e);
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-                alertDialog.setTitle(R.string.networkTitle);
-                alertDialog.setMessage(R.string.error);
-                alertDialog.setIcon(R.mipmap.network);
+//                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+//                alertDialog.setTitle(R.string.networkTitle);
+//                alertDialog.setMessage(R.string.error);
+//                alertDialog.setIcon(R.mipmap.network);
             } finally {
                 connection.disconnect();
             }
@@ -92,19 +91,21 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
         int i = 0;
         Vorhersage vorhersage = new Vorhersage();
         ArrayList<Wetter> arrayListWetter = new ArrayList<Wetter>();
-        while(i < 5){
+        while(i < 10){
             Wetter wetter = new Wetter();
             JSONArray arrayList = data.getJSONArray("list");
             JSONObject wetterData = new JSONObject(arrayList.get(i).toString());
             JSONObject dayDataMain = wetterData.getJSONObject("main");
             wetter.setTemperatur(dayDataMain.getDouble("temp"));
 
-            JSONArray arrayListData = data.getJSONArray("weather");
+
+            JSONArray arrayListData = wetterData.getJSONArray("weather");
             JSONObject dayDataWeather = new JSONObject(arrayListData.get(0).toString());
             wetter.setBeschreibung(dayDataWeather.getString("description"));
-            wetter.setIcon(dayDataWeather.getString("icon"));
+//            wetter.setIcon(dayDataWeather.getString("icon"));
 
             arrayListWetter.add(wetter);
+            i++;
         }
         vorhersage.setWetterArrayList(arrayListWetter);
 
@@ -122,11 +123,11 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
         return resultBuilder.toString();
     }
 
-    protected void onPostExecute(AktuellesWetter aktuellesWetter) {
-        if (null == aktuellesWetter) {
-            activity.displayLoadingDataFailedError();
+    protected void onPostExecute(Vorhersage vorhersage) {
+        if (null == vorhersage) {
+            //Errors
         } else {
-            activity.setData(aktuellesWetter);
+            activity.setData(vorhersage);
         }
     }
 }

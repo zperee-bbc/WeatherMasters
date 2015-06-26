@@ -1,5 +1,7 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -8,14 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.ListView;
 
 
 public class PredictionActivity extends AppCompatActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = PredictionActivity.class.getCanonicalName();
-    private String ortschaft;
-    private String name;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +30,19 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
         actionBar.addTab(actionBar.newTab().setText(R.string.aktuell).setTabListener(this), false);
         actionBar.addTab(actionBar.newTab().setText(R.string.vorhersage).setTabListener(this), true);
         actionBar.setHomeButtonEnabled(false);
-        Intent intent = getIntent();
 
-        ortschaft = intent.getStringExtra("stadt");
-        name = intent.getStringExtra("name");
+        dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
+        JSonLoadingTaskPrediction loadingTask = new JSonLoadingTaskPrediction(this);
+        loadingTask.execute("Uster");
 
-        TextView textViewOrtschaft = (TextView) findViewById(R.id.textViewWetterOrt);
-        textViewOrtschaft.setText(ortschaft);
+
+    }
+
+    public void setData(Vorhersage vorhersage){
+        WeatherPrediction_adapter weatherPrediction_adapter = new WeatherPrediction_adapter(this, R.id.weatherPredictionItem, vorhersage.getWetterArrayList());
+        ListView prediction_listView = (ListView) findViewById(R.id.prediction_listView);
+        prediction_listView.setAdapter(weatherPrediction_adapter);
+        dialog.dismiss();
     }
 
     @Override
@@ -43,7 +50,6 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_weather_details, menu);
         return true;
-
 
     }
 
