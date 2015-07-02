@@ -1,7 +1,7 @@
 package ch.berufsbildungscenter.weathermasters;
 
 import android.content.Context;
-import android.util.Log;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class WeatherPrediction_adapter extends ArrayAdapter<Wetter> {
     private static final String LOG_TAG = WeatherPrediction_adapter.class.getCanonicalName();
@@ -35,52 +37,16 @@ public class WeatherPrediction_adapter extends ArrayAdapter<Wetter> {
         description.setText(wetter.getBeschreibung());
 
         ImageView imgView = (ImageView) rowView.findViewById(R.id.icon_imageView);
-        loadImage(wetter.getIcon(), imgView);
+        int wetterIcon = wetter.loadImage(wetter.getIcon());
+        imgView.setImageResource(wetterIcon);
+
 
         TextView datum = (TextView) rowView.findViewById(R.id.textViewDatum);
-        datum.setText(wetter.getDatum());
-        return rowView;
-    }
 
-    public void loadImage(String stringBuilderIcon, ImageView imageView) {
-        if (stringBuilderIcon.equals("01d")) {
-            imageView.setImageResource(R.drawable.day_clear);
-        } else if (stringBuilderIcon.equals("02d")) {
-            imageView.setImageResource(R.drawable.day_few_clouds);
-        } else if (stringBuilderIcon.equals("03d")) {
-            imageView.setImageResource(R.drawable.day_scattered_clouds);
-        } else if (stringBuilderIcon.equals("04d")) {
-            imageView.setImageResource(R.drawable.day_broken_clouds);
-        } else if (stringBuilderIcon.equals("09d")) {
-            imageView.setImageResource(R.drawable.day_shower_rain);
-        } else if (stringBuilderIcon.equals("10d")) {
-            imageView.setImageResource(R.drawable.day_rain);
-        } else if (stringBuilderIcon.equals("11d")) {
-            imageView.setImageResource(R.drawable.day_thunderstorm);
-        } else if (stringBuilderIcon.equals("13d")) {
-            imageView.setImageResource(R.drawable.day_snow);
-        } else if (stringBuilderIcon.equals("50d")) {
-            imageView.setImageResource(R.drawable.day_mist);
-        } else if (stringBuilderIcon.equals("01n")) {
-            imageView.setImageResource(R.drawable.night_clear);
-        } else if (stringBuilderIcon.equals("02n")) {
-            imageView.setImageResource(R.drawable.night_few_clouds);
-        } else if (stringBuilderIcon.equals("03n")) {
-            imageView.setImageResource(R.drawable.night_scattered_clouds);
-        } else if (stringBuilderIcon.equals("04n")) {
-            imageView.setImageResource(R.drawable.night_broken_clouds);
-        } else if (stringBuilderIcon.equals("09n")) {
-            imageView.setImageResource(R.drawable.night_shower_rain);
-        } else if (stringBuilderIcon.equals("10n")) {
-            imageView.setImageResource(R.drawable.night_rain);
-        } else if (stringBuilderIcon.equals("11n")) {
-            imageView.setImageResource(R.drawable.night_thunderstorm);
-        } else if (stringBuilderIcon.equals("13n")) {
-            imageView.setImageResource(R.drawable.night_snow);
-        } else if (stringBuilderIcon.equals("50n")) {
-            imageView.setImageResource(R.drawable.night_mist);
-        } else {
-            Log.i(LOG_TAG, "Kein Icon gefunden");
-        }
+        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+        cal.setTimeInMillis(Long.parseLong(wetter.getDatum()));
+        String date = DateFormat.format("dd-MM-yyyy", cal).toString();
+        datum.setText(date);
+        return rowView;
     }
 }

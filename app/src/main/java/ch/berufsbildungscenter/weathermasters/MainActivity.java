@@ -1,16 +1,19 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -30,18 +33,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
     public static final String WETTERDATA = "WetterData";
     private Standort standort;
+    private Dialog gpsDialog;
     private AktuellesWetter aktuellesWetter;
     private long lastRefresh;
     private String temperature;
     private String details;
     private String beschreibung;
     private String stadt;
-    private String icon;
-    private GPSTracker gpsTracker;
-
+    private int icon;
     Dialog dialog;
-
-    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,23 +62,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnectedOrConnecting()){
-                gpsTracker = new GPSTracker(MainActivity.this);
-                if (gpsTracker.canGetLocation()){
-                    standort = new Standort();
-                    standort.setLatitude(gpsTracker.getLatitude());
-                    standort.setLongitude(gpsTracker.getLongitude());
-                } else {
-                    gpsTracker.showSettingsAlert();
-                }
-            gpsTracker.stopUsingGPS();
-
-
-
-//                GPSTracker gpsTracker = new GPSTracker();
-//                gpsDialog = ProgressDialog.show(MainActivity.this, "Suche genaue GPS Position", "Bitte warten...");
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if (enabled) {
+//                GPSTracker gpsTracker = new GPSTracker(this);
+//                gpsDialog = ProgressDialog.show(this, "Suche genaue GPS Position", "Bitte warten...");
 //                standort = new Standort();
-//                standort.setLongitude(gpsTracker.location.getLongitude());
-//                standort.setLatitude(gpsTracker.location.getLatitude());
+//                standort.setLatitude(gpsTracker.latitude);
+//                standort.setLongitude(gpsTracker.longtitude);
 //                gpsDialog.dismiss();
 
                 Calendar checkCalendar = Calendar.getInstance();
@@ -88,10 +79,31 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 if (timeStampCheck - lastRefresh / 1000 > 600) {
                     dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
                     JSonLoadingActualTask jSonLoadingActualTask = new JSonLoadingActualTask(this);
-                    jSonLoadingActualTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
+                    jSonLoadingActualTask.execute("lat=" + "55" + "&lon=" + "55");
                 } else {
                     checkAndSetOfflineData();
                 }
+            } else {
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                alertDialogBuilder.setTitle(R.string.gpsTitle);
+                alertDialogBuilder.setMessage(R.string.gpsMessage);
+                alertDialogBuilder.setIcon(R.mipmap.gps);
+                alertDialogBuilder.setPositiveButton(R.string.ja, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(intent);
+                    }
+                });
+                alertDialogBuilder.setNegativeButton(R.string.nein, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alertDialogBuilder.show();
+                checkAndSetOfflineData();
+            }
         }
         else {
             checkAndSetOfflineData();
@@ -99,6 +111,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             connection.setText(R.string.noConnection);
             connection.setTextColor(Color.RED);
         }
+    }
+
+    public void displayLoadingDataFailedError() {
+        Toast.makeText(this, "Fehler beim darstellen der Daten.", Toast.LENGTH_SHORT).show();
     }
 
     public void setData(AktuellesWetter aktuellesWetter) {
@@ -112,7 +128,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         ortschaftView.setText(aktuellesWetter.getStandort().getStadt());
 
         ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
-        loadImage(aktuellesWetter.getIconPath(), imgView);
+        int wetterIcon = aktuellesWetter.loadImage(aktuellesWetter.getIcon());
+        imgView.setImageResource(wetterIcon);
 
         TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
         temp.setText(aktuellesWetter.tempToString());
@@ -139,56 +156,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         editor.putString("Temperatur", aktuellesWetter.tempToString());
         editor.putString("Details", aktuellesWetter.descriptionToString());
         editor.putString("Beschreibung", aktuellesWetter.detailToString());
-        editor.putString("Icon", aktuellesWetter.getIconPath());
+        editor.putInt("Icon", wetterIcon);
         editor.putString("Ortschaft", aktuellesWetter.getStandort().getStadt());
 
         editor.commit();
-
-        Log.i(LOG_TAG, "TimeStamp " + String.valueOf(timeStamp));
-
         dialog.dismiss();
-    }
-
-    public void loadImage(String stringBuilderIcon, ImageView imageView) {
-        if (stringBuilderIcon.equals("01d")) {
-            imageView.setImageResource(R.drawable.day_clear);
-        } else if (stringBuilderIcon.equals("02d")) {
-            imageView.setImageResource(R.drawable.day_few_clouds);
-        } else if (stringBuilderIcon.equals("03d")) {
-            imageView.setImageResource(R.drawable.day_scattered_clouds);
-        } else if (stringBuilderIcon.equals("04d")) {
-            imageView.setImageResource(R.drawable.day_broken_clouds);
-        } else if (stringBuilderIcon.equals("09d")) {
-            imageView.setImageResource(R.drawable.day_shower_rain);
-        } else if (stringBuilderIcon.equals("10d")) {
-            imageView.setImageResource(R.drawable.day_rain);
-        } else if (stringBuilderIcon.equals("11d")) {
-            imageView.setImageResource(R.drawable.day_thunderstorm);
-        } else if (stringBuilderIcon.equals("13d")) {
-            imageView.setImageResource(R.drawable.day_snow);
-        } else if (stringBuilderIcon.equals("50d")) {
-            imageView.setImageResource(R.drawable.day_mist);
-        } else if (stringBuilderIcon.equals("01n")) {
-            imageView.setImageResource(R.drawable.night_clear);
-        } else if (stringBuilderIcon.equals("02n")) {
-            imageView.setImageResource(R.drawable.night_few_clouds);
-        } else if (stringBuilderIcon.equals("03n")) {
-            imageView.setImageResource(R.drawable.night_scattered_clouds);
-        } else if (stringBuilderIcon.equals("04n")) {
-            imageView.setImageResource(R.drawable.night_broken_clouds);
-        } else if (stringBuilderIcon.equals("09n")) {
-            imageView.setImageResource(R.drawable.night_shower_rain);
-        } else if (stringBuilderIcon.equals("10n")) {
-            imageView.setImageResource(R.drawable.night_rain);
-        } else if (stringBuilderIcon.equals("11n")) {
-            imageView.setImageResource(R.drawable.night_thunderstorm);
-        } else if (stringBuilderIcon.equals("13n")) {
-            imageView.setImageResource(R.drawable.night_snow);
-        } else if (stringBuilderIcon.equals("50n")) {
-            imageView.setImageResource(R.drawable.night_mist);
-        } else {
-            Log.i(LOG_TAG, "Kein Icon gefunden");
-        }
     }
 
     @Override
@@ -223,24 +195,24 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //Check zuletzt aktualisiert
         SharedPreferences timeStampFile = getSharedPreferences(WETTERDATA, 0);
         lastRefresh = timeStampFile.getLong("TimeStamp", 0);
-        temperature = timeStampFile.getString("Temperatur", "fail");
+        temperature = timeStampFile.getString("Temperatur", " ");
         details = timeStampFile.getString("Details", "fail");
-        beschreibung = timeStampFile.getString("Beschreibung", "fail");
-        stadt = timeStampFile.getString("Ortschaft", "fail");
-        icon = timeStampFile.getString("Icon", "fail");
+        beschreibung = timeStampFile.getString("Beschreibung", " ");
+        stadt = timeStampFile.getString("Ortschaft", " ");
+        icon = timeStampFile.getInt("Icon", 0);
         TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
         temp.setText(temperature);
         Timestamp lastRefreshText = new Timestamp(lastRefresh);
         TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
         time.setText("Zuletzt aktualisiert: " + lastRefreshText);
         TextView dataView = (TextView) findViewById(R.id.textViewDetail);
-        dataView.setText(details);
+        dataView.setText(beschreibung );
         TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
-        description.setText(beschreibung);
+        description.setText(details);
         TextView ortschaft = (TextView) findViewById(R.id.textViewOrtschaft);
         ortschaft.setText(stadt);
         ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
-        loadImage(icon, imgView);
+        imgView.setImageResource(icon);
     }
 
 
@@ -255,7 +227,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         } else if (tab.getPosition() == 0) {
             Log.i(LOG_TAG, "Orte");
             Intent intent = new Intent(this, Favorite_cities.class);
-
             startActivity(intent);
         }
     }
