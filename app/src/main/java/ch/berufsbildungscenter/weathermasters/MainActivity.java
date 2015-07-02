@@ -1,10 +1,15 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -27,11 +32,17 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
     public static final String REFRESHTIME = "RefreshTime";
     public static final String WETTERDATA = "WetterData";
+    private Context mContext;
     private GPSTracker gps;
     private Standort standort;
     private Dialog gpsDialog;
-    private Context mContext = null;
     private AktuellesWetter aktuellesWetter;
+    private long lastRefresh;
+    private String temperature;
+    private String details;
+    private String beschreibung;
+    private String stadt;
+    private String icon;
 
     Dialog dialog;
 
@@ -51,45 +62,36 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         actionBar.addTab(actionBar.newTab().setText(R.string.vorhersage).setTabListener(this), false);
         actionBar.setHomeButtonEnabled(false);
 
-        //Check zuletzt aktualisiert
-        SharedPreferences timeStampFile = getSharedPreferences(WETTERDATA, 0);
-        long lastRefresh = timeStampFile.getLong("TimeStamp", 0);
-        String temperature = timeStampFile.getString("Temperatur", "fail");
-        String details = timeStampFile.getString("Details", "fail");
-        String beschreibung = timeStampFile.getString("Beschreibung", "fail");
-        String stadt = timeStampFile.getString("Ortschaft", "fail");
-        String icon = timeStampFile.getString("Icon", "fail");
+        checkAndSetOfflineData();
 
-        gps = new GPSTracker(MainActivity.this);
-        GPSTracker gpsTracker = new GPSTracker(this);
-        gpsDialog = ProgressDialog.show(this, "Suche genaue GPS Position", "Bitte warten...");
-        standort = new Standort();
-        standort.setLatitude(gpsTracker.latitude);
-        standort.setLongitude(gpsTracker.longtitude);
-        gpsDialog.dismiss();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnectedOrConnecting()){
+            gps = new GPSTracker(MainActivity.this);
+            GPSTracker gpsTracker = new GPSTracker(this);
+            gpsDialog = ProgressDialog.show(this, "Suche genaue GPS Position", "Bitte warten...");
+            standort = new Standort();
+            standort.setLatitude(gpsTracker.latitude);
+            standort.setLongitude(gpsTracker.longtitude);
+            gpsDialog.dismiss();
 
-        Calendar checkCalendar = Calendar.getInstance();
-        Date checkNow = checkCalendar.getTime();
-        long timeStampCheck = checkNow.getTime() / 1000;
+            Calendar checkCalendar = Calendar.getInstance();
+            Date checkNow = checkCalendar.getTime();
+            long timeStampCheck = checkNow.getTime() / 1000;
 
-        if (timeStampCheck - lastRefresh / 1000 > 600) {
-            dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
-            JSonLoadingTaskActual loadingTask = new JSonLoadingTaskActual(this);
-            loadingTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
-        } else {
-            TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
-            temp.setText(temperature);
-            Timestamp lastRefreshText = new Timestamp(lastRefresh);
-            TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
-            time.setText("Zuletzt aktualisiert: " + lastRefreshText);
-            TextView dataView = (TextView) findViewById(R.id.textViewDetail);
-            dataView.setText(details);
-            TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
-            description.setText(beschreibung);
-            TextView ortschaft = (TextView) findViewById(R.id.textViewOrtschaft);
-            ortschaft.setText(stadt);
-            ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
-            loadImage(icon, imgView);
+            if (timeStampCheck - lastRefresh / 1000 > 600) {
+                dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
+                JSonLoadingTaskActual loadingTask = new JSonLoadingTaskActual(this);
+                loadingTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
+            } else {
+                checkAndSetOfflineData();
+            }
+        }
+        else {
+            checkAndSetOfflineData();
+            TextView connection = (TextView) findViewById(R.id.textViewConnection);
+            connection.setText(R.string.noConnection);
+            connection.setTextColor(Color.RED);
         }
     }
 
@@ -213,6 +215,30 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void checkAndSetOfflineData(){
+        //Check zuletzt aktualisiert
+        SharedPreferences timeStampFile = getSharedPreferences(WETTERDATA, 0);
+        lastRefresh = timeStampFile.getLong("TimeStamp", 0);
+        temperature = timeStampFile.getString("Temperatur", "fail");
+        details = timeStampFile.getString("Details", "fail");
+        beschreibung = timeStampFile.getString("Beschreibung", "fail");
+        stadt = timeStampFile.getString("Ortschaft", "fail");
+        icon = timeStampFile.getString("Icon", "fail");
+        TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
+        temp.setText(temperature);
+        Timestamp lastRefreshText = new Timestamp(lastRefresh);
+        TextView time = (TextView) findViewById(R.id.textViewAktualisiert);
+        time.setText("Zuletzt aktualisiert: " + lastRefreshText);
+        TextView dataView = (TextView) findViewById(R.id.textViewDetail);
+        dataView.setText(details);
+        TextView description = (TextView) findViewById(R.id.textViewBeschreibung);
+        description.setText(beschreibung);
+        TextView ortschaft = (TextView) findViewById(R.id.textViewOrtschaft);
+        ortschaft.setText(stadt);
+        ImageView imgView = (ImageView) findViewById(R.id.imageViewWetter);
+        loadImage(icon, imgView);
     }
 
 

@@ -21,6 +21,7 @@
     <string name="networkTitle">Netzwerk Fehler</string>
     <string name="errorTitle">Fehler!</string>
     <string name="error">Es ist ein Fehler aufgetretene</string>
+    <string name="noConnection">Keine Internetverbindung! Daten vom letzten Download werden angezeigt!</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_town">TownActivity</string>
     <string name="title_activity_favorite_cities">favorite_cities</string>
