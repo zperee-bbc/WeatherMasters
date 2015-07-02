@@ -1,7 +1,5 @@
 package ch.berufsbildungscenter.weathermasters;
 
-import android.widget.ArrayAdapter;
-
 import java.util.ArrayList;
 
 /**

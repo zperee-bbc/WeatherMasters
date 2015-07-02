@@ -1,18 +1,14 @@
 package ch.berufsbildungscenter.weathermasters;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -34,7 +30,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
     public static final String WETTERDATA = "WetterData";
     private Standort standort;
-    private Dialog gpsDialog;
     private AktuellesWetter aktuellesWetter;
     private long lastRefresh;
     private String temperature;
@@ -42,6 +37,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private String beschreibung;
     private String stadt;
     private String icon;
+    private GPSTracker gpsTracker;
 
     Dialog dialog;
 
@@ -66,15 +62,24 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnectedOrConnecting()){
-            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            if (enabled) {
-                GPSTracker gpsTracker = new GPSTracker(this);
-                gpsDialog = ProgressDialog.show(this, "Suche genaue GPS Position", "Bitte warten...");
-                standort = new Standort();
-                standort.setLatitude(gpsTracker.latitude);
-                standort.setLongitude(gpsTracker.longtitude);
-                gpsDialog.dismiss();
+                gpsTracker = new GPSTracker(MainActivity.this);
+                if (gpsTracker.canGetLocation()){
+                    standort = new Standort();
+                    standort.setLatitude(gpsTracker.getLatitude());
+                    standort.setLongitude(gpsTracker.getLongitude());
+                } else {
+                    gpsTracker.showSettingsAlert();
+                }
+            gpsTracker.stopUsingGPS();
+
+
+
+//                GPSTracker gpsTracker = new GPSTracker();
+//                gpsDialog = ProgressDialog.show(MainActivity.this, "Suche genaue GPS Position", "Bitte warten...");
+//                standort = new Standort();
+//                standort.setLongitude(gpsTracker.location.getLongitude());
+//                standort.setLatitude(gpsTracker.location.getLatitude());
+//                gpsDialog.dismiss();
 
                 Calendar checkCalendar = Calendar.getInstance();
                 Date checkNow = checkCalendar.getTime();
@@ -87,27 +92,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 } else {
                     checkAndSetOfflineData();
                 }
-            } else {
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                alertDialogBuilder.setTitle(R.string.gpsTitle);
-                alertDialogBuilder.setMessage(R.string.gpsMessage);
-                alertDialogBuilder.setIcon(R.mipmap.gps);
-                alertDialogBuilder.setPositiveButton(R.string.ja, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(intent);
-                    }
-                });
-                alertDialogBuilder.setNegativeButton(R.string.nein, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                alertDialogBuilder.show();
-                checkAndSetOfflineData();
-            }
         }
         else {
             checkAndSetOfflineData();
@@ -115,10 +99,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             connection.setText(R.string.noConnection);
             connection.setTextColor(Color.RED);
         }
-    }
-
-    public void displayLoadingDataFailedError() {
-        Toast.makeText(this, "Fehler beim darstellen der Daten.", Toast.LENGTH_SHORT).show();
     }
 
     public void setData(AktuellesWetter aktuellesWetter) {
