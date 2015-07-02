@@ -34,14 +34,14 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
         actionBar.setHomeButtonEnabled(false);
 
         dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
-        JSonLoadingTaskPrediction loadingTask = new JSonLoadingTaskPrediction(this);
+        JSonLoadingPredictionTask jSonLoadingPredictionTask = new JSonLoadingPredictionTask(this);
         Intent intent = getIntent();
 
         ortschaft = intent.getStringExtra("stadt");
 
         TextView textViewOrtschaft = (TextView) findViewById(R.id.textViewWetterOrt);
         textViewOrtschaft.setText(ortschaft);
-        loadingTask.execute(ortschaft);
+        jSonLoadingPredictionTask.execute(ortschaft);
 
 
     }

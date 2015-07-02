@@ -1,10 +1,8 @@
 package ch.berufsbildungscenter.weathermasters;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -30,9 +28,7 @@ import java.util.Date;
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
-    public static final String REFRESHTIME = "RefreshTime";
     public static final String WETTERDATA = "WetterData";
-    private Context mContext;
     private GPSTracker gps;
     private Standort standort;
     private Dialog gpsDialog;
@@ -81,8 +77,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
             if (timeStampCheck - lastRefresh / 1000 > 600) {
                 dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
-                JSonLoadingTaskActual loadingTask = new JSonLoadingTaskActual(this);
-                loadingTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
+                JSonLoadingActualTask jSonLoadingActualTask = new JSonLoadingActualTask(this);
+                jSonLoadingActualTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
             } else {
                 checkAndSetOfflineData();
             }

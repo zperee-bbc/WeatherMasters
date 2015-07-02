@@ -1,5 +1,6 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +10,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,34 +18,37 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by zmartl on 17.06.2015.
- * Version ${VERSION}
+ * Created by zperee on 02.07.2015.
  */
-public class JSonLoadingTaskActual extends AsyncTask<String, Void, AktuellesWetter> {
-
+public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
     Intent intent = new Intent();
 
     private String position = intent.getStringExtra("position");
+    private URL url;
+    protected JSonParser jSonParser;
 
-    private static final String LOG_TAG = JSonLoadingTaskActual.class.getCanonicalName();
-    private final String API_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&lang=de&";
+    private static final String LOG_TAG = JSonLoadingTask.class.getCanonicalName();
+
+
     private Context mContext = null;
+    private Activity activity;
+    protected String Api_Url = "";
 
-    private MainActivity activity;
-
-    public JSonLoadingTaskActual(MainActivity activity) {
+    public JSonLoadingTask(Activity activity) {
         this.activity = activity;
+        jSonParser = new JSonParser();
     }
 
     @Override
-    protected AktuellesWetter doInBackground(String... params) {
-        AktuellesWetter aktuellesWetter = null;
+    protected String doInBackground(String... params) {
+        String result = "";
         String pos = params[0];
         HttpURLConnection connection = null;
 
         if (isNetworkConnectionAvailable()) {
             try {
-                URL url = new URL(String.format(API_URL+pos));
+                String[] positionArray = pos.split(" ");
+                url = new URL(String.format(Api_Url + positionArray[0]));
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -56,10 +56,17 @@ public class JSonLoadingTaskActual extends AsyncTask<String, Void, AktuellesWett
                 int responseCode = connection.getResponseCode();
 
                 if (HttpURLConnection.HTTP_OK == responseCode) {
-                    aktuellesWetter = parseData(connection.getInputStream());
+                    result = readInput(connection.getInputStream());
                 } else {
+
                     Log.e(LOG_TAG, String.format("Ein Fehler ist aufgetreten. Service nicht verfugbar.", responseCode));
+
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+                    alertDialog.setTitle(R.string.errorTitle);
+                    alertDialog.setMessage(R.string.serviceUnavailable);
+                    alertDialog.setIcon(R.mipmap.warning);
                 }
+
             } catch (Exception e) {
                 Log.e(LOG_TAG, "Ein Fehler ist aufgetreten", e);
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
@@ -73,7 +80,7 @@ public class JSonLoadingTaskActual extends AsyncTask<String, Void, AktuellesWett
             Log.e(LOG_TAG, "Keine Internetverbindung!");
             Toast.makeText(activity, "Keine Internetverbindung", Toast.LENGTH_LONG);
         }
-        return aktuellesWetter;
+        return result;
     }
 
     private boolean isNetworkConnectionAvailable() {
@@ -82,30 +89,6 @@ public class JSonLoadingTaskActual extends AsyncTask<String, Void, AktuellesWett
         return null != networkInfo && networkInfo.isConnected();
     }
 
-    private AktuellesWetter parseData(InputStream inputStream) throws IOException, JSONException {
-
-        AktuellesWetter aktuellesWetter = new AktuellesWetter();
-
-        String input = readInput(inputStream);
-        JSONObject data = new JSONObject(input);
-        String name = data.getString("name");
-        JSONObject wetterData = data.getJSONObject("main");
-
-        aktuellesWetter.setLuftdruck(wetterData.getDouble("pressure"));
-        aktuellesWetter.setLuftfaeuchtigkeit(wetterData.getDouble("humidity"));
-        aktuellesWetter.setTemp(wetterData.getDouble("temp"));
-
-        aktuellesWetter.setStandort(new Standort());
-        aktuellesWetter.getStandort().setStadt(name);
-
-        JSONArray arrayList = data.getJSONArray("weather");
-        JSONObject weatherArray = new JSONObject(arrayList.get(0).toString());
-
-        aktuellesWetter.setBeschreibung(weatherArray.getString("description"));
-        aktuellesWetter.setIcon(weatherArray.getString("icon"));
-
-        return aktuellesWetter;
-    }
 
     private String readInput(InputStream inputStream) throws IOException {
         StringBuilder resultBuilder = new StringBuilder();
@@ -118,12 +101,15 @@ public class JSonLoadingTaskActual extends AsyncTask<String, Void, AktuellesWett
         return resultBuilder.toString();
     }
 
-    @Override
-    protected void onPostExecute(AktuellesWetter aktuellesWetter) {
-        if (null == aktuellesWetter) {
-            activity.displayLoadingDataFailedError();
+    protected abstract void onCostumePostExecute(String jsonString);
+
+    protected void onPostExecute(String jsonString) {
+        if (null == jsonString) {
+            //Errors
         } else {
-            activity.setData(aktuellesWetter);
+            onCostumePostExecute(jsonString);
         }
     }
+
+
 }
