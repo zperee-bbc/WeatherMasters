@@ -41,7 +41,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private String beschreibung;
     private String stadt;
     private int icon;
-    Dialog dialog;
+    private Dialog dialog;
+    private GPSTracker gpsTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,46 +63,25 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnectedOrConnecting()){
-            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            boolean enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            if (enabled) {
-//                GPSTracker gpsTracker = new GPSTracker(this);
-//                gpsDialog = ProgressDialog.show(this, "Suche genaue GPS Position", "Bitte warten...");
-//                standort = new Standort();
-//                standort.setLatitude(gpsTracker.latitude);
-//                standort.setLongitude(gpsTracker.longtitude);
-//                gpsDialog.dismiss();
-
-                Calendar checkCalendar = Calendar.getInstance();
-                Date checkNow = checkCalendar.getTime();
-                long timeStampCheck = checkNow.getTime() / 1000;
-
-                if (timeStampCheck - lastRefresh / 1000 > 600) {
-                    dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
-                    JSonLoadingActualTask jSonLoadingActualTask = new JSonLoadingActualTask(this);
-                    jSonLoadingActualTask.execute("lat=" + "55" + "&lon=" + "55");
-                } else {
-                    checkAndSetOfflineData();
-                }
+            gpsTracker = new GPSTracker(MainActivity.this);
+            if (gpsTracker.canGetLocation()){
+                standort = new Standort();
+                standort.setLatitude(gpsTracker.getLatitude());
+                standort.setLongitude(gpsTracker.getLongitude());
             } else {
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                alertDialogBuilder.setTitle(R.string.gpsTitle);
-                alertDialogBuilder.setMessage(R.string.gpsMessage);
-                alertDialogBuilder.setIcon(R.mipmap.gps);
-                alertDialogBuilder.setPositiveButton(R.string.ja, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(intent);
-                    }
-                });
-                alertDialogBuilder.setNegativeButton(R.string.nein, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                alertDialogBuilder.show();
+                gpsTracker.showSettingsAlert();
+            }
+            gpsTracker.stopUsingGPS();
+
+            Calendar checkCalendar = Calendar.getInstance();
+            Date checkNow = checkCalendar.getTime();
+            long timeStampCheck = checkNow.getTime() / 1000;
+
+            if (timeStampCheck - lastRefresh / 1000 > 600) {
+                dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
+                JSonLoadingActualTask jSonLoadingActualTask = new JSonLoadingActualTask(this);
+                jSonLoadingActualTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
+            } else {
                 checkAndSetOfflineData();
             }
         }

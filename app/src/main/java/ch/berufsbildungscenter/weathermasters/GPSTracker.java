@@ -1,20 +1,17 @@
 package ch.berufsbildungscenter.weathermasters;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.audiofx.BassBoost;
-import android.media.browse.MediaBrowser;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.util.Log;
 
 /**
  * Created by zmartl on 24.06.2015.
@@ -29,6 +26,7 @@ public class GPSTracker extends Service implements LocationListener {
     private double latitude;
     private double longitude;
     private Location location;
+    private static final String LOG_TAG = MainActivity.class.getCanonicalName();
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     private static final long MIN_TIME_BETWEEN_UPDATES = 1000;
@@ -75,7 +73,7 @@ public class GPSTracker extends Service implements LocationListener {
 
             }
         } catch (Exception e){
-
+            Log.e(LOG_TAG, "GPS Fehler aufgetreten!");
         }
         return location;
     }

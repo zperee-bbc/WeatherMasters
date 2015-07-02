@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class WeatherPrediction_adapter extends ArrayAdapter<Wetter> {
-    private static final String LOG_TAG = WeatherPrediction_adapter.class.getCanonicalName();
     private Context context;
     private Wetter wetter;
 
