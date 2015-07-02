@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Weather Masters</string>
-
     <string name="action_settings">Einstellungen</string>
     <string name="luftfaeuchtigkeit">Luftfeuchtigkeit</string>
     <string name="luftdruck">Luftdruck</string>
