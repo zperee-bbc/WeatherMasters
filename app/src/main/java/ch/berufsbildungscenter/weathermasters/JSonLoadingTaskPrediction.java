@@ -34,7 +34,7 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
 
     private static final String LOG_TAG = JSonLoadingTaskPrediction.class.getCanonicalName();
 
-    private final String API_URL = "http://api.openweathermap.org/data/2.5/forecast?units=metric&lang=de&q=";
+    private final String API_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=de&q=";
     private Context mContext = null;
 
     private PredictionActivity activity;
@@ -105,8 +105,8 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
             Wetter wetter = new Wetter();
             JSONArray arrayList = data.getJSONArray("list");
             JSONObject wetterData = new JSONObject(arrayList.get(i).toString());
-            JSONObject dayDataMain = wetterData.getJSONObject("main");
-            wetter.setTemperatur(dayDataMain.getDouble("temp"));
+            JSONObject dayDataMain = wetterData.getJSONObject("temp");
+            wetter.setTemperatur(dayDataMain.getDouble("day"));
 
 
             JSONArray arrayListData = wetterData.getJSONArray("weather");

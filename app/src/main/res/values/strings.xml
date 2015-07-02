@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeatherMasters</string>
+    <string name="app_name">Weather Masters</string>
 
     <string name="action_settings">Einstellungen</string>
     <string name="luftfaeuchtigkeit">Luftfeuchtigkeit</string>
@@ -27,4 +27,5 @@
     <string name="title_activity_activity_favorite_cities">activity_favorite_cities</string>
     <string name="title_activity_favorite_citiy">Favoriten</string>
     <string name="title_activity_weather_prediction_adapter">weatherPrediction_adapter</string>
+    <string name="title_activity_splash">SplashActivity</string>
 </resources>
