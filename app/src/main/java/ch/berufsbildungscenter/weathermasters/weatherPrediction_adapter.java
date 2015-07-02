@@ -37,6 +37,8 @@ public class WeatherPrediction_adapter extends ArrayAdapter<Wetter> {
         ImageView imgView = (ImageView) rowView.findViewById(R.id.icon_imageView);
         loadImage(wetter.getIcon(), imgView);
 
+        TextView datum = (TextView) rowView.findViewById(R.id.textViewDatum);
+        datum.setText(wetter.getDatum());
         return rowView;
     }
 

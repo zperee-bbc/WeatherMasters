@@ -3,7 +3,6 @@ package ch.berufsbildungscenter.weathermasters;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -11,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -52,6 +50,9 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
         WeatherPrediction_adapter weatherPrediction_adapter = new WeatherPrediction_adapter(this, R.id.weatherPredictionItem, vorhersage.getWetterArrayList());
         ListView prediction_listView = (ListView) findViewById(R.id.prediction_listView);
         prediction_listView.setAdapter(weatherPrediction_adapter);
+
+        TextView standort = (TextView) findViewById(R.id.textViewWetterOrt);
+        standort.setText(vorhersage.getWetterArrayList().get(0).getStandort().getStadt());
 
         dialog.dismiss();
     }

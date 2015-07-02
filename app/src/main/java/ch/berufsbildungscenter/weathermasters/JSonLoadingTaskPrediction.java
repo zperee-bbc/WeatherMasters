@@ -51,7 +51,7 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
 
         if (isNetworkConnectionAvailable()) {
             try {
-                    String[] positionArray = pos.split(" ");
+                   String[] positionArray = pos.split(" ");
                     url = new URL(String.format(API_URL + positionArray[0]));
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("GET");
@@ -108,11 +108,20 @@ public class JSonLoadingTaskPrediction extends AsyncTask<String, Void, Vorhersag
             JSONObject dayDataMain = wetterData.getJSONObject("temp");
             wetter.setTemperatur(dayDataMain.getDouble("day"));
 
-
             JSONArray arrayListData = wetterData.getJSONArray("weather");
             JSONObject dayDataWeather = new JSONObject(arrayListData.get(0).toString());
             wetter.setBeschreibung(dayDataWeather.getString("description"));
             wetter.setIcon(dayDataWeather.getString("icon"));
+            wetter.setDatum(wetterData.getString("dt"));
+
+            JSONObject cityInfo = data.getJSONObject("city");
+            JSONObject coordinaten = cityInfo.getJSONObject("coord");
+            Standort standortVorhersage = new Standort();
+            standortVorhersage.setStadt(cityInfo.getString("name"));
+            standortVorhersage.setCityId(cityInfo.getInt("id"));
+            standortVorhersage.setLatitude(coordinaten.getDouble("lat"));
+            standortVorhersage.setLongitude(coordinaten.getDouble("lon"));
+            wetter.setStandort(standortVorhersage);
 
             arrayListWetter.add(wetter);
             i++;
