@@ -9,6 +9,12 @@
         support:showAsAction="collapseActionView|ifRoom"/>
 
     <item
+        android:id="@+id/butonAddFavorite"
+        android:icon="@mipmap/favorite_clear"
+        android:title="Zu favoriten hinzufügen"
+        support:showAsAction="collapseActionView|ifRoom"/>
+
+    <item
         android:id="@+id/buttonSettings"
         android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
         android:title="Einstellungen"

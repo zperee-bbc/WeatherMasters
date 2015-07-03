@@ -1,6 +1,5 @@
 package ch.berufsbildungscenter.weathermasters;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -129,8 +128,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         time.setText("Zuletzt aktualisiert: " + currentTimestamp);
 
         //Schreibt aktuellen Timestamp in File
-        SharedPreferences timeStampFile = getSharedPreferences(WETTERDATA, 0);
-        SharedPreferences.Editor editor = timeStampFile.edit();
+        SharedPreferences oldWeatherData = getSharedPreferences(WETTERDATA, 0);
+        SharedPreferences.Editor editor = oldWeatherData.edit();
         editor.putLong("TimeStamp", timeStamp);
         editor.putString("Temperatur", aktuellesWetter.tempToString());
         editor.putString("Details", aktuellesWetter.descriptionToString());
@@ -163,8 +162,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             return true;
         } else if (id == R.id.buttonSearch) {
             Intent intent = new Intent(this, Favorite_cities.class);
-
             startActivity(intent);
+        } else if (id == R.id.butonAddFavorite) {
+            TextView city = (TextView) findViewById(R.id.textViewOrtschaft);
+            addCity((String) city.getText());
         }
 
         return super.onOptionsItemSelected(item);
@@ -172,13 +173,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     private void checkAndSetOfflineData(){
         //Check zuletzt aktualisiert
-        SharedPreferences timeStampFile = getSharedPreferences(WETTERDATA, 0);
-        lastRefresh = timeStampFile.getLong("TimeStamp", 0);
-        temperature = timeStampFile.getString("Temperatur", " ");
-        details = timeStampFile.getString("Details", "fail");
-        beschreibung = timeStampFile.getString("Beschreibung", " ");
-        stadt = timeStampFile.getString("Ortschaft", " ");
-        icon = timeStampFile.getInt("Icon", 0);
+        SharedPreferences oldWeatherData = getSharedPreferences(WETTERDATA, 0);
+
+        lastRefresh = oldWeatherData.getLong("TimeStamp", 0);
+        temperature = oldWeatherData.getString("Temperatur", " ");
+        details = oldWeatherData.getString("Details", "fail");
+        beschreibung = oldWeatherData.getString("Beschreibung", " ");
+        stadt = oldWeatherData.getString("Ortschaft", " ");
+        icon = oldWeatherData.getInt("Icon", 0);
         TextView temp = (TextView) findViewById(R.id.textViewTemperatur);
         temp.setText(temperature);
         Timestamp lastRefreshText = new Timestamp(lastRefresh);
@@ -219,4 +221,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
 
     }
+
+    public void addCity(String city) {
+        SharedPreferences favoriteCities = getSharedPreferences("FavoriteCities", 0);
+        SharedPreferences.Editor editor = favoriteCities.edit();
+        int i = 0;
+        while (favoriteCities.contains("City" + i)){
+            i++;
+        }
+        editor.putString("City" + i, city);
+        editor.commit();
+    }
+
 }
