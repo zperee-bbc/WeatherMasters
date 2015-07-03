@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
 import ch.berufsbildungscenter.weathermasters.JSon.JSonLoadingActualTask;
@@ -49,13 +51,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
         actionBar.addTab(actionBar.newTab().setText(R.string.orte).setTabListener(this), false);
         actionBar.addTab(actionBar.newTab().setText(R.string.aktuell).setTabListener(this), true);
         actionBar.addTab(actionBar.newTab().setText(R.string.vorhersage).setTabListener(this), false);
         actionBar.setHomeButtonEnabled(false);
-
         checkAndSetOfflineData();
+
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -73,7 +74,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             Calendar checkCalendar = Calendar.getInstance();
             Date checkNow = checkCalendar.getTime();
             long timeStampCheck = checkNow.getTime() / 1000;
-
             if (timeStampCheck - lastRefresh / 1000 > 600) {
                 customDialog = new CustomDialog();
                 customDialog.displayProgrammDialog(this, "Lade Informationen", "Bitte warten...");
@@ -89,10 +89,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             connection.setText(R.string.noConnection);
             connection.setTextColor(Color.RED);
         }
-    }
-
-    public void displayLoadingDataFailedError() {
-        Toast.makeText(this, "Fehler beim darstellen der Daten.", Toast.LENGTH_SHORT).show();
     }
 
     public void setData(AktuellesWetter aktuellesWetter) {
@@ -174,7 +170,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private void checkAndSetOfflineData(){
         //Check zuletzt aktualisiert
         SharedPreferences oldWeatherData = getSharedPreferences(WETTERDATA, 0);
-
         lastRefresh = oldWeatherData.getLong("TimeStamp", 0);
         temperature = oldWeatherData.getString("Temperatur", " ");
         details = oldWeatherData.getString("Details", "fail");

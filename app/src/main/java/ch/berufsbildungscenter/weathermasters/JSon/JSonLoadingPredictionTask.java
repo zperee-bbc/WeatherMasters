@@ -1,6 +1,10 @@
 package ch.berufsbildungscenter.weathermasters.JSon;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import java.util.Map;
 
 import ch.berufsbildungscenter.weathermasters.PredictionActivity;
 import ch.berufsbildungscenter.weathermasters.Vorhersage;
@@ -11,12 +15,25 @@ import ch.berufsbildungscenter.weathermasters.Vorhersage;
 public class JSonLoadingPredictionTask extends JSonLoadingTask {
 
     private PredictionActivity predictionActivity;
-    JSonLoadingPredictionTask activity = this;
+    private Activity activity;
 
     public JSonLoadingPredictionTask(Activity activity) {
     super(activity);
-    this.predictionActivity = (PredictionActivity)activity;
-    Api_Url = "http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=de&q=";
+        this.activity = activity;
+        this.predictionActivity = (PredictionActivity)activity;
+
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(activity);
+
+        String item = prefs.getString("exanple_list", "metric");
+        if (item.equals("metric"))
+        {
+            Api_Url = "http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=de&q=";
+        } else {
+            Api_Url = "http://api.openweathermap.org/data/2.5/forecast/daily?units=imperial&lang=de&q=";
+        }
+
+
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +18,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
 
 
 public class Favorite_cities extends AppCompatActivity implements ActionBar.TabListener {
@@ -33,6 +37,7 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
     Activity activity = this;
     private SharedPreferences.Editor editor;
     private SharedPreferences favoriteCities;
+    private CustomDialog customDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +114,15 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
             public void onItemClick(AdapterView parent, View v, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), PredictionActivity.class);
                 String selected = parent.getItemAtPosition(position).toString();
-                intent.putExtra("stadt", selected);
-                startActivity(intent);
+                if (selected == null){
+                    TextView warning = (TextView) findViewById(R.id.warning);
+                    warning.setText("Keine Ortschaft ausgewählt");
+                    customDialog = new CustomDialog();
+                    customDialog.displayAlertDialog(Favorite_cities.this, R.string.warnung, R.string.stadtMessage, R.mipmap.world);
+                } else {
+                    intent.putExtra("stadt", selected);
+                    startActivity(intent);
+                }
             }
         };
         citiesListView.setOnItemClickListener(mListClickedHandler);
@@ -148,6 +160,7 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
             startActivity(intent);
         } else if (tab.getPosition() == 2) {
             Intent intent = new Intent(this, PredictionActivity.class);
+            intent.putExtra("stadt", citiesListView.getItemAtPosition(0).toString());
             startActivity(intent);
             Log.i(LOG_TAG, "Vorhersage");
         }
