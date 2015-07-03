@@ -80,10 +80,12 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
                 alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
-                        editor = favoriteCities.edit();
-                        editor.remove("City" + position);
-                        editor.commit();
+//                        favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
+//                        editor = favoriteCities.edit();
+//                        editor.remove("City" + position);
+//                        Log.i(LOG_TAG, "City" + position);
+//                        editor.commit();
+                        removeCity(cities.get(position));
                         loadListView();
                     }
                 });
@@ -171,9 +173,22 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
         }
         EditText addCity = (EditText) findViewById(R.id.editSearch);
         editor.putString("City" + i, addCity.getText().toString());
+        Log.i(LOG_TAG, "City" + i);
         editor.commit();
         loadListView();
         addCity.setText("");
+    }
+
+    public void removeCity(String city){
+        SharedPreferences favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
+        SharedPreferences.Editor editor = favoriteCities.edit();
+        Map<String, ?> allEntries = favoriteCities.getAll();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            if (entry.getValue().equals(city)){
+                editor.remove(entry.getKey());
+                editor.commit();
+            }
+        }
     }
 
 }
