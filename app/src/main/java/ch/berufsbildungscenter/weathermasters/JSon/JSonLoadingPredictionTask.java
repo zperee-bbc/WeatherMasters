@@ -1,8 +1,9 @@
-package ch.berufsbildungscenter.weathermasters;
+package ch.berufsbildungscenter.weathermasters.JSon;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
+
+import ch.berufsbildungscenter.weathermasters.PredictionActivity;
+import ch.berufsbildungscenter.weathermasters.Vorhersage;
 
 /**
  * Created by zperee on 02.07.2015.
@@ -10,6 +11,7 @@ import android.content.SharedPreferences;
 public class JSonLoadingPredictionTask extends JSonLoadingTask {
 
     private PredictionActivity predictionActivity;
+    JSonLoadingPredictionTask activity = this;
 
     public JSonLoadingPredictionTask(Activity activity) {
     super(activity);

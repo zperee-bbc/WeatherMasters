@@ -1,4 +1,4 @@
-package ch.berufsbildungscenter.weathermasters;
+package ch.berufsbildungscenter.weathermasters.Location;
 
 import android.app.AlertDialog;
 import android.app.Service;
@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+
+import ch.berufsbildungscenter.weathermasters.MainActivity;
+import ch.berufsbildungscenter.weathermasters.R;
 
 /**
  * Created by zmartl on 24.06.2015.

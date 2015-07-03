@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import ch.berufsbildungscenter.weathermasters.JSon.JSonLoadingPredictionTask;
+
 
 public class PredictionActivity extends AppCompatActivity implements ActionBar.TabListener {
 

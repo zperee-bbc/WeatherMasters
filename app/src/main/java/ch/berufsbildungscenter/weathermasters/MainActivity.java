@@ -1,18 +1,13 @@
 package ch.berufsbildungscenter.weathermasters;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -27,13 +22,16 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
+import ch.berufsbildungscenter.weathermasters.JSon.JSonLoadingActualTask;
+import ch.berufsbildungscenter.weathermasters.Location.GPSTracker;
+
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = MainActivity.class.getCanonicalName();
     public static final String WETTERDATA = "WetterData";
     private Standort standort;
-    private Dialog gpsDialog;
     private AktuellesWetter aktuellesWetter;
     private long lastRefresh;
     private String temperature;
@@ -41,7 +39,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     private String beschreibung;
     private String stadt;
     private int icon;
-    private Dialog dialog;
+    private CustomDialog customDialog;
     private GPSTracker gpsTracker;
 
     @Override
@@ -78,7 +76,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             long timeStampCheck = checkNow.getTime() / 1000;
 
             if (timeStampCheck - lastRefresh / 1000 > 600) {
-                dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
+                customDialog = new CustomDialog();
+                customDialog.displayProgrammDialog(this, "Lade Informationen", "Bitte warten...");
                 JSonLoadingActualTask jSonLoadingActualTask = new JSonLoadingActualTask(this);
                 jSonLoadingActualTask.execute("lat=" + standort.getLatitude() + "&lon=" + standort.getLongitude());
             } else {
@@ -140,7 +139,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         editor.putString("Ortschaft", aktuellesWetter.getStandort().getStadt());
 
         editor.commit();
-        dialog.dismiss();
+        customDialog.stopDisplayDialog();
     }
 
     @Override

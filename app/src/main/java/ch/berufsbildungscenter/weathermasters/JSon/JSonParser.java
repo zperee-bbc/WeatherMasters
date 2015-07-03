@@ -1,10 +1,15 @@
-package ch.berufsbildungscenter.weathermasters;
+package ch.berufsbildungscenter.weathermasters.JSon;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import ch.berufsbildungscenter.weathermasters.AktuellesWetter;
+import ch.berufsbildungscenter.weathermasters.Standort;
+import ch.berufsbildungscenter.weathermasters.Vorhersage;
+import ch.berufsbildungscenter.weathermasters.Wetter;
 
 /**
  * Created by zperee on 02.07.2015.

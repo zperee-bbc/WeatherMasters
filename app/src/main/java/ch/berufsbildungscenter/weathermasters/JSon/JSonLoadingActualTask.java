@@ -1,6 +1,9 @@
-package ch.berufsbildungscenter.weathermasters;
+package ch.berufsbildungscenter.weathermasters.JSon;
 
 import android.app.Activity;
+
+import ch.berufsbildungscenter.weathermasters.AktuellesWetter;
+import ch.berufsbildungscenter.weathermasters.MainActivity;
 
 /**
  * Created by zperee on 02.07.2015.
