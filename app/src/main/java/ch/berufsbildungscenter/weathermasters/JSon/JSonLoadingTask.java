@@ -17,21 +17,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
 import ch.berufsbildungscenter.weathermasters.R;
 
 /**
  * Created by zperee on 02.07.2015.
  */
 public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
-    Intent intent = new Intent();
 
-    private String position = intent.getStringExtra("position");
     private URL url;
     protected JSonParser jSonParser;
-
+    private CustomDialog customDialog;
     private static final String LOG_TAG = JSonLoadingTask.class.getCanonicalName();
-
-
     private Context mContext = null;
     private Activity activity;
     protected String Api_Url = "";
@@ -39,6 +36,7 @@ public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
     public JSonLoadingTask(Activity activity) {
         this.activity = activity;
         jSonParser = new JSonParser();
+        customDialog = new CustomDialog();
     }
 
     @Override
@@ -69,17 +67,12 @@ public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
                 }
 
             } catch (Exception e) {
-                Log.e(LOG_TAG, "Ein Fehler ist aufgetreten", e);
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-                alertDialog.setTitle(R.string.networkTitle);
-                alertDialog.setMessage(R.string.error);
-                alertDialog.setIcon(R.mipmap.network);
+                customDialog.displayAlertDialog(mContext, R.string.networkTitle, R.string.error, R.mipmap.network);
             } finally {
                 connection.disconnect();
             }
         } else {
-            Log.e(LOG_TAG, "Keine Internetverbindung!");
-            Toast.makeText(activity, "Keine Internetverbindung", Toast.LENGTH_LONG);
+            customDialog.displayAlertDialog(mContext, R.string.networkTitle, R.string.noConnection, R.mipmap.network);
         }
         return result;
     }
