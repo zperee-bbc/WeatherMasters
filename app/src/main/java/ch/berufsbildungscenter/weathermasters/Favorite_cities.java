@@ -1,8 +1,13 @@
 package ch.berufsbildungscenter.weathermasters;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +30,11 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
     private static final String LOG_TAG = Favorite_cities.class.getCanonicalName();
     public static final String FAVORITECITIES = "FavoriteCities";
     private ListView citiesListView;
+    private ArrayAdapter citiesArrayAdapter;
+    private List<String> cities = null;
+    Activity activity = this;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences favoriteCities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +52,56 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
 
     }
 
-    public void loadListView() {
-        SharedPreferences favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
-        Map<String, ?> citesList = favoriteCities.getAll();
-        List<String> cities = new ArrayList<String>((Collection<? extends String>) citesList.values());
-
-        citiesListView = (ListView)findViewById(R.id.favoriteCities);
-        ArrayAdapter citiesArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+    private void displayList(){
         for(String cities2 : cities) {
             citiesArrayAdapter.add(cities2);
             citiesListView.setAdapter(citiesArrayAdapter);
         }
+    }
+
+    public void loadListView() {
+        favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
+        final Map<String, ?> citesList = favoriteCities.getAll();
+        cities = new ArrayList<String>((Collection<? extends String>) citesList.values());
+
+        citiesListView = (ListView)findViewById(R.id.favoriteCities);
+
+        citiesArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        displayList();
+
+        citiesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+                alertDialog.setTitle(R.string.removeTitle);
+                alertDialog.setMessage("M\u00f6chten Sie " + cities.get(position) + " l\u00f6schen?");
+                alertDialog.setIcon(R.mipmap.remove);
+                alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
+                        editor = favoriteCities.edit();
+                        editor.remove("City" + position);
+                        Log.i(LOG_TAG, "City" + position);
+                        cities.remove(position);
+                        editor.commit();
+                    }
+                });
+                alertDialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                alertDialog.show();
+
+                return true;
+            }
+        });
+
         actionListener();
     }
 
@@ -119,8 +165,8 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
     }
 
     public void addCity(View view) {
-        SharedPreferences favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
-        SharedPreferences.Editor editor = favoriteCities.edit();
+        favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
+        editor = favoriteCities.edit();
 
         int i = 1;
         while (favoriteCities.contains("City" + i)){

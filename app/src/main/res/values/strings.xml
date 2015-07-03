@@ -14,6 +14,7 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="gpsTitle">GPS Einstellungen</string>
     <string name="gpsMessage">GPS ist nicht eingeschalten. Einstellungen öffnen?</string>
+    <string name="removeTitle">Löschen</string>
     <string name="ja">Ja</string>
     <string name="nein">Nein</string>
     <string name="serviceUnavailable">Der Service ist aktuell nicht verfügbar. \n Versuchen Sie es später erneut. </string>

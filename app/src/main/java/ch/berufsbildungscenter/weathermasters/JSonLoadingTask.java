@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -47,8 +48,7 @@ public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
 
         if (isNetworkConnectionAvailable()) {
             try {
-                String[] positionArray = pos.split(" ");
-                url = new URL(String.format(Api_Url + positionArray[0]));
+                url = new URL(String.format(Api_Url + pos.replaceAll(" ", "")));
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
