@@ -3,6 +3,7 @@ package ch.berufsbildungscenter.weathermasters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -48,6 +49,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

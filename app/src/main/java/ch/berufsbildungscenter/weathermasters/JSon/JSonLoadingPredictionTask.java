@@ -25,7 +25,7 @@ public class JSonLoadingPredictionTask extends JSonLoadingTask {
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(activity);
 
-        String item = prefs.getString("exanple_list", "metric");
+        String item = prefs.getString("example_list", "metric");
         if (item.equals("metric"))
         {
             Api_Url = "http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=de&q=";

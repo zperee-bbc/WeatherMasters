@@ -1,10 +1,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:key="example_list"
-        android:title="@string/pref_title_unit"
-        android:defaultValue="metric"
-        android:entries="@array/pref_list_unit"
-        android:entryValues="@array/pref_list_unit_values"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null" />
+    android:key="example_list"
+    android:title="@string/pref_title_unit"
+    android:defaultValue="metric"
+    android:entries="@array/pref_list_unit"
+    android:entryValues="@array/pref_list_unit_values"
+    android:negativeButtonText="@null"
+    android:positiveButtonText="@null" />
+
 </PreferenceScreen>

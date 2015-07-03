@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import java.util.Map;
 
@@ -32,17 +33,9 @@ public class SettingsActivity extends PreferenceActivity {
                 {
                     super.onCreate(savedInstanceState);
                     addPreferencesFromResource(R.xml.pref_general);
+
                 }
             }).commit();
-
-            SharedPreferences prefs = PreferenceManager
-                    .getDefaultSharedPreferences(this);
-
-            Map<String, ?> item = prefs.getAll();
-            if (item.isEmpty())
-            {
-
-            }
     }
 
 }
