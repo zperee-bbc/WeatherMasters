@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
+import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
 import ch.berufsbildungscenter.weathermasters.MainActivity;
 import ch.berufsbildungscenter.weathermasters.R;
 
@@ -29,7 +30,7 @@ public class GPSTracker extends Service implements LocationListener {
     private double latitude;
     private double longitude;
     private Location location;
-    private static final String LOG_TAG = MainActivity.class.getCanonicalName();
+    private CustomDialog customDialog = new CustomDialog();
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     private static final long MIN_TIME_BETWEEN_UPDATES = 1000;
@@ -71,12 +72,12 @@ public class GPSTracker extends Service implements LocationListener {
             }
             if(isGPSEnabled){
                 if(location == null){
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BETWEEN_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    customDialog.displayAlertDialog(context, R.string.gpsErrorTitle, R.string.gpsErrorMessage, R.mipmap.warning);
                 }
 
             }
         } catch (Exception e){
-            Log.e(LOG_TAG, "GPS Fehler aufgetreten!");
+            customDialog.displayAlertDialog(context, R.string.gpsErrorTitle, R.string.gpsErrorMessage, R.mipmap.warning);
         }
         return location;
     }
