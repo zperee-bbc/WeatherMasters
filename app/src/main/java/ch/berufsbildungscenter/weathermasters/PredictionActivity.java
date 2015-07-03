@@ -2,7 +2,10 @@ package ch.berufsbildungscenter.weathermasters;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -13,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
 import ch.berufsbildungscenter.weathermasters.JSon.JSonLoadingPredictionTask;
 
 
@@ -21,6 +25,7 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
     private static final String LOG_TAG = PredictionActivity.class.getCanonicalName();
     Dialog dialog;
     private String ortschaft;
+    private CustomDialog customDialog = new CustomDialog();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +40,24 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
         actionBar.addTab(actionBar.newTab().setText(R.string.vorhersage).setTabListener(this), true);
         actionBar.setHomeButtonEnabled(false);
 
-        dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
-        JSonLoadingPredictionTask jSonLoadingPredictionTask = new JSonLoadingPredictionTask(this);
-        Intent intent = getIntent();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnectedOrConnecting()) {
 
-        ortschaft = intent.getStringExtra("stadt");
+            dialog = ProgressDialog.show(this, "Lade Informationen", "Bitte warten...");
+            JSonLoadingPredictionTask jSonLoadingPredictionTask = new JSonLoadingPredictionTask(this);
+            Intent intent = getIntent();
 
-        TextView textViewOrtschaft = (TextView) findViewById(R.id.textViewWetterOrt);
-        textViewOrtschaft.setText(ortschaft);
-        jSonLoadingPredictionTask.execute(ortschaft);
+            ortschaft = intent.getStringExtra("stadt");
+
+            TextView textViewOrtschaft = (TextView) findViewById(R.id.textViewWetterOrt);
+            textViewOrtschaft.setText(ortschaft);
+            jSonLoadingPredictionTask.execute(ortschaft);
+        } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+
 
     }
 
