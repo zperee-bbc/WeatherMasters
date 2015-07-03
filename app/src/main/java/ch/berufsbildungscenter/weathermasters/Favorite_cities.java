@@ -2,12 +2,10 @@ package ch.berufsbildungscenter.weathermasters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -85,9 +83,8 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
                         favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
                         editor = favoriteCities.edit();
                         editor.remove("City" + position);
-                        Log.i(LOG_TAG, "City" + position);
-                        cities.remove(position);
                         editor.commit();
+                        loadListView();
                     }
                 });
                 alertDialog.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
@@ -168,7 +165,7 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
         favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
         editor = favoriteCities.edit();
 
-        int i = 1;
+        int i = 0;
         while (favoriteCities.contains("City" + i)){
             i++;
         }

@@ -45,7 +45,6 @@ public class PredictionActivity extends AppCompatActivity implements ActionBar.T
         textViewOrtschaft.setText(ortschaft);
         jSonLoadingPredictionTask.execute(ortschaft);
 
-
     }
 
     public void setData(Vorhersage vorhersage){

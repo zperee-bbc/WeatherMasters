@@ -11,10 +11,10 @@
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="20sp"
+        android:textSize="12sp"
+        android:text="99.99.9999"
         android:id="@+id/textViewDatum"
-        android:layout_alignBaseline="@+id/textView_temp"
-        android:layout_alignBottom="@+id/textView_temp"
+        android:layout_above="@+id/description_text"
         android:layout_alignParentStart="true" />
 
     <ImageView

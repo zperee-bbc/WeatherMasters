@@ -1,7 +1,6 @@
 package ch.berufsbildungscenter.weathermasters;
 
 import android.content.Context;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class WeatherPrediction_adapter extends ArrayAdapter<Wetter> {
     private Context context;
@@ -42,10 +41,20 @@ public class WeatherPrediction_adapter extends ArrayAdapter<Wetter> {
 
         TextView datum = (TextView) rowView.findViewById(R.id.textViewDatum);
 
-        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-        cal.setTimeInMillis(Long.parseLong(wetter.getDatum()));
-        String date = DateFormat.format("dd-MM-yyyy", cal).toString();
-        datum.setText(date);
+        long timestamp = Long.parseLong(wetter.getDatum()) * 1000;
+        datum.setText(getDate(timestamp));
+
         return rowView;
+    }
+
+    private CharSequence getDate(long timeStamp) {
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+            Date netDate = (new Date(timeStamp));
+            return sdf.format(netDate);
+        } catch (Exception ex) {
+            return "xx";
+        }
     }
 }
