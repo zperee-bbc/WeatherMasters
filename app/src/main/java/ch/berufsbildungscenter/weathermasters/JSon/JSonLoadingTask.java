@@ -47,6 +47,8 @@ public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
 
         if (isNetworkConnectionAvailable()) {
             try {
+
+                url = new URL(String.format(Api_Url +  pos.replaceAll(" ", "")));
                 url = new URL(String.format(Api_Url + pos.replaceAll(" ", "")));
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
@@ -99,7 +101,7 @@ public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
 
     protected void onPostExecute(String jsonString) {
         if (null == jsonString) {
-            //Errors
+            //ToDo Better Exception Handling
         } else {
             onCostumePostExecute(jsonString);
         }
