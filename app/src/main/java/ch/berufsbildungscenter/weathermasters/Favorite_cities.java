@@ -26,6 +26,7 @@ import java.util.Map;
 
 import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
 import ch.berufsbildungscenter.weathermasters.Location.GPSTracker;
+import ch.berufsbildungscenter.weathermasters.Model.Standort;
 
 
 public class Favorite_cities extends AppCompatActivity implements ActionBar.TabListener {
@@ -39,8 +40,6 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
     private SharedPreferences.Editor editor;
     private SharedPreferences favoriteCities;
     private CustomDialog customDialog;
-    private GPSTracker gpsTracker;
-    private Standort standort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +62,17 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
             citiesArrayAdapter.add(cities2);
             citiesListView.setAdapter(citiesArrayAdapter);
         }
+        if(cities.size() == 0){
+            citiesArrayAdapter.add("Sie haben nichts");
+            citiesListView.setAdapter(citiesArrayAdapter);
+
+        }
     }
 
     public void loadListView() {
         favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
         final Map<String, ?> citesList = favoriteCities.getAll();
         cities = new ArrayList<String>((Collection<? extends String>) citesList.values());
-
         citiesListView = (ListView)findViewById(R.id.favoriteCities);
 
         citiesArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
@@ -88,11 +91,6 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
                 alertDialog.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        favoriteCities = getSharedPreferences(FAVORITECITIES, 0);
-//                        editor = favoriteCities.edit();
-//                        editor.remove("City" + position);
-//                        Log.i(LOG_TAG, "City" + position);
-//                        editor.commit();
                         removeCity(cities.get(position));
                         loadListView();
                     }

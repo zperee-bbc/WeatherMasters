@@ -23,6 +23,8 @@ import java.util.Date;
 import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
 import ch.berufsbildungscenter.weathermasters.JSon.JSonLoadingActualTask;
 import ch.berufsbildungscenter.weathermasters.Location.GPSTracker;
+import ch.berufsbildungscenter.weathermasters.Model.AktuellesWetter;
+import ch.berufsbildungscenter.weathermasters.Model.Standort;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {

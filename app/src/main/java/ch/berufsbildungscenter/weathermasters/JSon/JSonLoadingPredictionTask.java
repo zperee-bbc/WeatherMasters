@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import java.util.Map;
-
 import ch.berufsbildungscenter.weathermasters.PredictionActivity;
-import ch.berufsbildungscenter.weathermasters.Vorhersage;
+import ch.berufsbildungscenter.weathermasters.Model.Vorhersage;
 
 /**
  * Created by zperee on 02.07.2015.
@@ -28,9 +26,9 @@ public class JSonLoadingPredictionTask extends JSonLoadingTask {
         String item = prefs.getString("example_list", "metric");
         if (item.equals("metric"))
         {
-            Api_Url = "http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=de&q=";
+            apiUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?units=metric&lang=de&q=";
         } else {
-            Api_Url = "http://api.openweathermap.org/data/2.5/forecast/daily?units=imperial&lang=de&q=";
+            apiUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?units=imperial&lang=de&q=";
         }
 
 

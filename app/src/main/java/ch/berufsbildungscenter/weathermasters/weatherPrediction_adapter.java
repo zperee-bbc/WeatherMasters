@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import ch.berufsbildungscenter.weathermasters.Model.Wetter;
+
 public class WeatherPrediction_adapter extends ArrayAdapter<Wetter> {
     private Context context;
     private Wetter wetter;

@@ -1,6 +1,8 @@
-package ch.berufsbildungscenter.weathermasters;
+package ch.berufsbildungscenter.weathermasters.Model;
 
 import java.util.HashMap;
+
+import ch.berufsbildungscenter.weathermasters.R;
 
 /**
  * Created by zmartl on 17.06.2015.
@@ -55,7 +57,6 @@ public class Wetter{
 
 
     public int loadImage(String imageName) {
-
         HashMap iconMap = new HashMap<String, Integer>();
         iconMap.put("01d", R.drawable.day_clear);
         iconMap.put("02d", R.drawable.day_few_clouds);
@@ -77,6 +78,5 @@ public class Wetter{
         iconMap.put("50n", R.drawable.night_mist);
 
         return (int) iconMap.get(imageName);
-
     }
 }

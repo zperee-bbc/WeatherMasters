@@ -1,6 +1,5 @@
 package ch.berufsbildungscenter.weathermasters.JSon;
 
-import android.app.Activity;
 import android.content.Context;
 
 import org.json.JSONArray;
@@ -9,12 +8,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import ch.berufsbildungscenter.weathermasters.AktuellesWetter;
+import ch.berufsbildungscenter.weathermasters.Model.AktuellesWetter;
 import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
 import ch.berufsbildungscenter.weathermasters.R;
-import ch.berufsbildungscenter.weathermasters.Standort;
-import ch.berufsbildungscenter.weathermasters.Vorhersage;
-import ch.berufsbildungscenter.weathermasters.Wetter;
+import ch.berufsbildungscenter.weathermasters.Model.Standort;
+import ch.berufsbildungscenter.weathermasters.Model.Vorhersage;
+import ch.berufsbildungscenter.weathermasters.Model.Wetter;
 
 /**
  * Created by zperee on 02.07.2015.

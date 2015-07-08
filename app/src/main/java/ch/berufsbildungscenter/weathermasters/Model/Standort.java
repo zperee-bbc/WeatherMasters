@@ -1,4 +1,4 @@
-package ch.berufsbildungscenter.weathermasters;
+package ch.berufsbildungscenter.weathermasters.Model;
 
 /**
  * Created by zmartl on 17.06.2015.

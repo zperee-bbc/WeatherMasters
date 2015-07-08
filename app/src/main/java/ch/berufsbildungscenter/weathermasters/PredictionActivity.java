@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
 import ch.berufsbildungscenter.weathermasters.JSon.JSonLoadingPredictionTask;
+import ch.berufsbildungscenter.weathermasters.Model.Vorhersage;
 
 
 public class PredictionActivity extends AppCompatActivity implements ActionBar.TabListener {

@@ -1,4 +1,4 @@
-package ch.berufsbildungscenter.weathermasters;
+package ch.berufsbildungscenter.weathermasters.Model;
 
 import java.util.ArrayList;
 

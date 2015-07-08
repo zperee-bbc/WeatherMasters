@@ -36,7 +36,7 @@ public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
     private static final String LOG_TAG = JSonLoadingTask.class.getCanonicalName();
     private Context mContext = null;
     private Activity activity;
-    protected String Api_Url = "";
+    protected String apiUrl = "";
     private String stadt;
 
     public JSonLoadingTask(Activity activity) {
@@ -55,7 +55,7 @@ public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
         if (isNetworkConnectionAvailable()) {
             try {
 
-                url = new URL(String.format(Api_Url + pos.replaceAll(" ", "")));
+                url = new URL(String.format(apiUrl + pos.replaceAll(" ", "")));
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -83,7 +83,13 @@ public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
         else {
             customDialog.displayAlertDialog(mContext, R.string.networkTitle, R.string.noConnection, R.mipmap.network);
         }
-        return result;
+
+        if (result == null){
+            //result can be null
+            return null;
+        } else {
+            return result;
+        }
     }
 
     private boolean isNetworkConnectionAvailable() {
@@ -108,7 +114,7 @@ public abstract class JSonLoadingTask extends AsyncTask<String, Void, String> {
 
     protected void onPostExecute(String jsonString) {
         if (null == jsonString) {
-            //ToDo Better Exception Handling
+            //Exception already catched above
         } else {
             onCostumePostExecute(jsonString);
         }
