@@ -3,12 +3,10 @@ package ch.berufsbildungscenter.weathermasters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -17,12 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 
 import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
 import ch.berufsbildungscenter.weathermasters.JSon.JSonLoadingActualTask;
@@ -156,13 +152,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         if (id == R.id.buttonSettings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
-            Log.i(LOG_TAG, "Settings Clicked");
             return true;
         } else if (id == R.id.buttonSearch) {
             Intent intent = new Intent(this, Favorite_cities.class);
             startActivity(intent);
         } else if (id == R.id.butonAddFavorite) {
             TextView city = (TextView) findViewById(R.id.textViewOrtschaft);
+            item.setIcon(R.mipmap.favorite_full);
             addCity((String) city.getText());
         }
 
