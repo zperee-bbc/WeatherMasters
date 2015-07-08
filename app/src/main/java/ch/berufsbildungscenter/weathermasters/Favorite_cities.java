@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,11 +25,13 @@ import java.util.List;
 import java.util.Map;
 
 import ch.berufsbildungscenter.weathermasters.Alert.CustomDialog;
+import ch.berufsbildungscenter.weathermasters.Location.GPSTracker;
 
 
 public class Favorite_cities extends AppCompatActivity implements ActionBar.TabListener {
     private static final String LOG_TAG = Favorite_cities.class.getCanonicalName();
     public static final String FAVORITECITIES = "FavoriteCities";
+    public static final String WETTERDATA = "WetterData";
     private ListView citiesListView;
     private ArrayAdapter citiesArrayAdapter;
     private List<String> cities = null;
@@ -38,6 +39,8 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
     private SharedPreferences.Editor editor;
     private SharedPreferences favoriteCities;
     private CustomDialog customDialog;
+    private GPSTracker gpsTracker;
+    private Standort standort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,8 +162,9 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else if (tab.getPosition() == 2) {
-            Intent intent = new Intent(this, PredictionActivity.class);
-            intent.putExtra("stadt", citiesListView.getItemAtPosition(0).toString());
+              Intent intent = new Intent(this, PredictionActivity.class);
+            SharedPreferences oldWeatherData = getSharedPreferences(WETTERDATA, 0);
+            intent.putExtra("stadt", oldWeatherData.getString("Ortschaft", "Earth"));
             startActivity(intent);
             Log.i(LOG_TAG, "Vorhersage");
         }
