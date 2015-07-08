@@ -19,6 +19,13 @@ public class WeatherPrediction_adapter extends ArrayAdapter<Wetter> {
     private Context context;
     private Wetter wetter;
 
+    //Android braucht den Default Constructor
+    public WeatherPrediction_adapter() {
+        super(null, 0);
+
+        throw new UnsupportedOperationException("");
+    }
+
     public WeatherPrediction_adapter(Context context, int resource, List<Wetter> wetter) {
         super(context, resource, wetter);
         this.context = context;
