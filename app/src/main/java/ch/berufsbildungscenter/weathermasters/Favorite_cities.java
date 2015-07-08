@@ -58,14 +58,15 @@ public class Favorite_cities extends AppCompatActivity implements ActionBar.TabL
     }
 
     private void displayList(){
+        TextView noCity = (TextView) findViewById(R.id.noCity);
         for(String cities2 : cities) {
             citiesArrayAdapter.add(cities2);
             citiesListView.setAdapter(citiesArrayAdapter);
+            noCity.setText("");
         }
         if(cities.size() == 0){
-            citiesArrayAdapter.add("Sie haben nichts");
             citiesListView.setAdapter(citiesArrayAdapter);
-
+            noCity.setText("Keine Favoriten vorhanden");
         }
     }
 
